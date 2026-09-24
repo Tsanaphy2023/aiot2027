@@ -7,6 +7,8 @@
 // 1. Navigation & Tab Management
 // ==========================================================================
 function switchPortalTab(tabId) {
+  if (tabId === 'curriculum') tabId = 'overview';
+
   // Hide all tab panes
   document.querySelectorAll('.tab-pane').forEach(pane => {
     pane.classList.remove('active');
@@ -34,6 +36,13 @@ function switchPortalTab(tabId) {
   const targetMobileBtn = document.getElementById(`mnav-${tabId}`);
   if (targetMobileBtn) {
     targetMobileBtn.classList.add('active');
+  }
+
+  // Auto-refresh data when opening relevant tabs
+  if (tabId === 'participants' && typeof loadPublicParticipants === 'function') {
+    loadPublicParticipants();
+  } else if (tabId === 'register' && typeof loadPublicStats === 'function') {
+    loadPublicStats();
   }
 
   // Scroll to top smoothly

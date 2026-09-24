@@ -52,6 +52,20 @@
             </button>
           </li>
 
+          <!-- Direct Registration Button (Highlighted) -->
+          <li>
+            <button class="nav-item-btn" id="nav-btn-register" onclick="switchPortalTab('register')" style="color: #10b981; font-weight: 700; border: 1px solid rgba(16, 185, 129, 0.35); background: rgba(16, 185, 129, 0.08); border-radius: 9999px; padding: 0.35rem 0.85rem;">
+              <i class="fa-solid fa-user-plus" style="color: #10b981;"></i> <span>ลงทะเบียน</span>
+            </button>
+          </li>
+
+          <!-- Direct Participants List Button -->
+          <li>
+            <button class="nav-item-btn" id="nav-btn-participants" onclick="switchPortalTab('participants')">
+              <i class="fa-solid fa-list-check" style="color: #8b5cf6;"></i> <span>รายชื่อ</span>
+            </button>
+          </li>
+
           <!-- Student System Dropdown (From AI4Student) -->
           <li class="nav-dropdown">
             <button class="nav-item-btn">
@@ -110,12 +124,16 @@
 
       <!-- Right Action Controls -->
       <div class="nav-right-actions">
+        <button class="btn-cta" onclick="switchPortalTab('register')" title="ลงทะเบียนเข้าร่วมอบรมฟรี">
+          <i class="fa-solid fa-pen-to-square"></i>
+          <span>ลงทะเบียน</span>
+        </button>
         <a href="admin.html" class="btn-secondary" style="font-size:0.82rem; padding:0.45rem 0.85rem;" title="ระบบหลังบ้านและจัดการฐานข้อมูล">
           <i class="fa-solid fa-user-shield" style="color: #f97316;"></i>
           <span>Admin</span>
         </a>
-        <a href="http://localhost:8088/" target="_blank" class="btn-cta" title="เปิดแดชบอร์ดควบคุมสดและ AI Studio">
-          <i class="fa-solid fa-chart-line"></i>
+        <a href="http://localhost:8088/" target="_blank" class="btn-secondary" style="font-size:0.82rem; padding:0.45rem 0.85rem;" title="เปิดแดชบอร์ดควบคุมสดและ AI Studio">
+          <i class="fa-solid fa-chart-line" style="color: #38bdf8;"></i>
           <span>Dashboard</span>
         </a>
         <button class="btn-icon-toggle" id="theme-toggle-btn" onclick="toggleTheme()" title="สลับโหมดมืด/สว่าง">
@@ -481,16 +499,6 @@
       </div>
 
     </section>
-
-    <!-- ==============================================================
-         TAB 2: INTERACTIVE SCHEDULE (2 DAYS)
-         ============================================================== -->
-    <section class="tab-pane" id="tab-schedule">
-      <div class="section-header">
-        <div class="section-badge">Workshop Schedule</div>
-        <h2 class="section-title">กำหนดการฝึกอบรมเชิงปฏิบัติการ (2 วัน 16 ชั่วโมง)</h2>
-        <p class="section-desc">ตารางกิจกรรมการเรียนรู้แบบ Active Learning ผสานทฤษฎีและลงมือปฏิบัติจริง</p>
-
 
     <!-- ==============================================================
          TAB 2: INTERACTIVE SCHEDULE (2 DAYS)
@@ -1382,7 +1390,7 @@
           <span>เมนูหลัก</span>
         </h4>
         <ul class="footer-links-list">
-          <li class="footer-link-item"><a href="javascript:void(0)" onclick="switchPortalTab('curriculum')"><span>🏠</span> หน้าหลักโครงการ</a></li>
+          <li class="footer-link-item"><a href="javascript:void(0)" onclick="switchPortalTab('overview')"><span>🏠</span> หน้าหลักโครงการ</a></li>
           <li class="footer-link-item"><a href="javascript:void(0)" onclick="switchPortalTab('register')"><span>✍️</span> ลงทะเบียนเข้าร่วมอบรม</a></li>
           <li class="footer-link-item"><a href="javascript:void(0)" onclick="switchPortalTab('participants')"><span>📋</span> ตรวจสอบรายชื่อผู้สมัคร</a></li>
           <li class="footer-link-item"><a href="javascript:void(0)" onclick="switchPortalTab('code')"><span>🤖</span> AI Coding Assistant</a></li>
@@ -1486,7 +1494,7 @@
 
   <!-- Futuristic Mobile Bottom Nav Bar (modeled after scirbru_praneet2026) -->
   <nav class="mobile-bottom-nav">
-    <button class="mobile-nav-btn active" id="mnav-curriculum" onclick="switchPortalTab('curriculum')">
+    <button class="mobile-nav-btn active" id="mnav-overview" onclick="switchPortalTab('overview')">
       <span class="mobile-nav-icon">🏠</span>
       <span>หน้าหลัก</span>
     </button>
