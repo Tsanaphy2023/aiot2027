@@ -544,6 +544,26 @@ function handleRoleChange(role) {
   }
 }
 
+// Switch Registration Sub-Tabs
+function switchRegSubtab(subtab) {
+  const btnForm = document.getElementById('btn-reg-subtab-form');
+  const btnLookup = document.getElementById('btn-reg-subtab-lookup');
+  const paneForm = document.getElementById('pane-reg-form');
+  const paneLookup = document.getElementById('pane-reg-lookup');
+
+  if (subtab === 'form') {
+    if (btnForm) btnForm.classList.add('active');
+    if (btnLookup) btnLookup.classList.remove('active');
+    if (paneForm) paneForm.style.display = 'block';
+    if (paneLookup) paneLookup.style.display = 'none';
+  } else {
+    if (btnForm) btnForm.classList.remove('active');
+    if (btnLookup) btnLookup.classList.add('active');
+    if (paneForm) paneForm.style.display = 'none';
+    if (paneLookup) paneLookup.style.display = 'block';
+  }
+}
+
 async function handlePublicRegistration(e) {
   e.preventDefault();
   const btn = document.getElementById('btn-submit-reg');
@@ -551,18 +571,22 @@ async function handlePublicRegistration(e) {
   const oldBtnText = btn.innerHTML;
 
   btn.disabled = true;
-  btn.innerHTML = '⏳ กำลังบันทึกข้อมูล...';
+  btn.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> กำลังประมวลผลการลงทะเบียน...';
   errBox.style.display = 'none';
 
   const payload = {
-    prefix: document.getElementById('reg-prefix').value,
-    fullname: document.getElementById('reg-fullname').value,
-    role: document.getElementById('reg-role').value,
-    food_pref: document.getElementById('reg-food').value,
-    school: document.getElementById('reg-school').value,
-    grade_dept: document.getElementById('reg-grade').value,
-    phone: document.getElementById('reg-phone').value,
-    email: document.getElementById('reg-email').value
+    prefix: document.getElementById('reg-prefix')?.value || 'นาย',
+    fullname: document.getElementById('reg-fullname')?.value.trim() || '',
+    role: document.getElementById('reg-role')?.value || 'student',
+    school: document.getElementById('reg-school')?.value.trim() || '',
+    province: document.getElementById('reg-province')?.value || 'จันทบุรี',
+    grade_dept: document.getElementById('reg-grade')?.value.trim() || '',
+    phone: document.getElementById('reg-phone')?.value.trim() || '',
+    line_id: document.getElementById('reg-line-id')?.value.trim() || '',
+    email: document.getElementById('reg-email')?.value.trim() || '',
+    laptop_avail: document.getElementById('reg-laptop')?.value || 'yes',
+    experience_level: document.getElementById('reg-experience')?.value || 'beginner',
+    food_pref: document.getElementById('reg-food')?.value || 'normal'
   };
 
   try {
@@ -577,43 +601,185 @@ async function handlePublicRegistration(e) {
     btn.innerHTML = oldBtnText;
 
     if (data.success) {
-      // Show confirmation card
+      // Hide form and display success digital pass
       document.getElementById('reg-form-card').style.display = 'none';
       const successCard = document.getElementById('reg-success-card');
       successCard.style.display = 'block';
 
+      // Populate Digital Workshop Pass
       document.getElementById('success-reg-code').textContent = data.reg_code;
       document.getElementById('success-reg-fullname').textContent = data.fullname;
       document.getElementById('success-reg-school').textContent = data.school;
+      document.getElementById('success-reg-grade').textContent = data.grade_dept || '-';
+      document.getElementById('success-reg-province').textContent = data.province || 'จันทบุรี';
+      
+      const roleBadge = document.getElementById('pass-role-badge');
+      if (roleBadge) {
+        roleBadge.textContent = data.role === 'teacher' ? '👨‍🏫 ครูผู้สอน' : '🎓 นักเรียน';
+      }
 
-      // Auto update Certificate Name & School
+      const qrTokenEl = document.getElementById('pass-qr-token');
+      if (qrTokenEl) {
+        qrTokenEl.textContent = data.qr_token || `TOKEN-${data.reg_code}`;
+      }
+
+      // Auto populate E-Certificate preview
       const certName = document.getElementById('cert-name-input');
       const certSchool = document.getElementById('cert-school-input');
       if (certName) certName.value = data.fullname;
       if (certSchool) certSchool.value = data.school;
       updateCertificatePreview();
 
-      // Refresh stats & list
+      // Refresh Stats & Directory
       loadPublicStats();
       loadPublicParticipants();
 
       successCard.scrollIntoView({ behavior: 'smooth' });
     } else {
       errBox.style.display = 'block';
-      errBox.textContent = data.error || 'เกิดข้อผิดพลาดในการลงทะเบียน';
+      errBox.innerHTML = `<strong>⚠️ ไม่สามารถลงทะเบียนได้:</strong> ${data.error || 'กรุณาตรวจสอบข้อมูล'}`;
+      if (data.already_registered && data.reg_code) {
+        errBox.innerHTML += `<br><button type="button" class="btn-secondary" style="margin-top: 0.5rem; font-size: 0.8rem; padding: 0.3rem 0.8rem;" onclick="quickLookupCode('${data.reg_code}')">🔎 ดูบัตรประจำตัวของท่านทันที</button>`;
+      }
     }
   } catch (err) {
     btn.disabled = false;
     btn.innerHTML = oldBtnText;
     errBox.style.display = 'block';
-    errBox.textContent = 'ไม่สามารถเชื่อมต่อฐานข้อมูล กรุณาลองใหม่อีกครั้ง';
+    errBox.textContent = '❌ ไม่สามารถเชื่อมต่อฐานข้อมูล กรุณาลองใหม่อีกครั้ง';
   }
 }
 
 function resetRegForm() {
-  document.getElementById('public-reg-form').reset();
-  document.getElementById('reg-form-card').style.display = 'block';
-  document.getElementById('reg-success-card').style.display = 'none';
+  const form = document.getElementById('public-reg-form');
+  if (form) form.reset();
+  const formCard = document.getElementById('reg-form-card');
+  if (formCard) formCard.style.display = 'block';
+  const successCard = document.getElementById('reg-success-card');
+  if (successCard) successCard.style.display = 'none';
+  window.scrollTo({ top: document.getElementById('tab-register').offsetTop - 60, behavior: 'smooth' });
+}
+
+// Quick Lookup Helper
+function quickLookupCode(code) {
+  switchRegSubtab('lookup');
+  const input = document.getElementById('lookup-input-q');
+  if (input) {
+    input.value = code;
+    document.getElementById('btn-lookup-submit')?.click();
+  }
+}
+
+// Handle Digital Workshop Pass Lookup
+async function handleLookupRegistration(e) {
+  e.preventDefault();
+  const q = document.getElementById('lookup-input-q')?.value.trim();
+  const errBox = document.getElementById('lookup-error-box');
+  const resultContainer = document.getElementById('lookup-result-container');
+  const btn = document.getElementById('btn-lookup-submit');
+  
+  if (!q) return;
+
+  btn.disabled = true;
+  btn.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i>';
+  errBox.style.display = 'none';
+  resultContainer.style.display = 'none';
+
+  try {
+    const res = await fetch(`/api/registration/lookup?q=${encodeURIComponent(q)}`);
+    const d = await res.json();
+    btn.disabled = false;
+    btn.innerHTML = '<span>ค้นหา</span>';
+
+    if (d.success && d.participant) {
+      const p = d.participant;
+      resultContainer.style.display = 'block';
+      resultContainer.innerHTML = `
+        <div id="printable-lookup-pass">
+          <div class="workshop-pass-card" style="margin-top: 1rem;">
+            <div class="pass-top-bar">
+              <div style="display: flex; align-items: center; gap: 0.6rem;">
+                <i class="fa-solid fa-microchip" style="font-size: 1.4rem;"></i>
+                <div>
+                  <div style="font-size: 0.9rem; font-weight: 800;">LEQs SciRBRU AIoT 2026</div>
+                  <div style="font-size: 0.72rem; opacity: 0.85;">Digital Workshop Official Pass</div>
+                </div>
+              </div>
+              <span class="tag-badge" style="background: rgba(255,255,255,0.25); color: #fff; border-color: rgba(255,255,255,0.4);">
+                ${p.role === 'teacher' ? '👨‍🏫 ครูผู้สอน' : '🎓 นักเรียน'}
+              </span>
+            </div>
+            <div class="pass-body">
+              <div class="pass-code-banner">
+                <div>
+                  <div style="font-size: 0.75rem; color: var(--text-dim); text-transform: uppercase;">รหัสบัตรประจำตัวผู้เข้าอบรม</div>
+                  <div style="font-size: 2.2rem; font-weight: 900; color: #10b981; font-family: var(--font-code); letter-spacing: 1px;">${p.reg_code}</div>
+                </div>
+                <div style="text-align: right;">
+                  <div style="font-size: 0.75rem; color: #34d399; font-weight: 700;">CHECK-IN STATUS</div>
+                  <div style="font-size: 0.95rem; font-weight: 800; color: ${p.checked_in ? '#10b981' : '#f59e0b'};">
+                    ${p.checked_in ? 'CHECKED-IN ✅' : 'CONFIRMED ⏳'}
+                  </div>
+                </div>
+              </div>
+              <div class="pass-details-grid">
+                <div class="pass-detail-item">
+                  <div class="detail-lbl">ชื่อ - นามสกุล ผู้เข้าอบรม</div>
+                  <div class="detail-val">${p.prefix || ''} ${p.fullname}</div>
+                </div>
+                <div class="pass-detail-item">
+                  <div class="detail-lbl">โรงเรียน / หน่วยงาน</div>
+                  <div class="detail-val">${p.school}</div>
+                </div>
+                <div class="pass-detail-item">
+                  <div class="detail-lbl">ระดับชั้น / กลุ่มสาระ</div>
+                  <div class="detail-val">${p.grade_dept || '-'}</div>
+                </div>
+                <div class="pass-detail-item">
+                  <div class="detail-lbl">จังหวัด</div>
+                  <div class="detail-val">${p.province || 'จันทบุรี'}</div>
+                </div>
+                <div class="pass-detail-item">
+                  <div class="detail-lbl">วันและเวลาจัดอบรม</div>
+                  <div class="detail-val" style="color: #f59e0b;">25 - 26 ธ.ค. 2568 (08:30 - 16:30 น.)</div>
+                </div>
+                <div class="pass-detail-item">
+                  <div class="detail-lbl">สถานที่จัดอบรม</div>
+                  <div class="detail-val">ห้องแล็บฟิสิกส์เกษตร คณะวิทย์ฯ มรภ.รำไพพรรณี</div>
+                </div>
+              </div>
+              <div class="pass-perforation"></div>
+              <div class="pass-footer-qr">
+                <div style="display: flex; align-items: center; gap: 1rem;">
+                  <div style="width: 64px; height: 64px; background: #ffffff; border-radius: 8px; padding: 4px; display: flex; align-items: center; justify-content: center;">
+                    <i class="fa-solid fa-qrcode" style="font-size: 3rem; color: #0f172a;"></i>
+                  </div>
+                  <div>
+                    <div style="font-size: 0.82rem; font-weight: 700; color: #e2e8f0;">บัตรยืนยันสิทธิ์ทางการ</div>
+                    <div style="font-size: 0.72rem; color: var(--text-muted);">นำมาแสดงวันจัดกิจกรรม</div>
+                    <div style="font-size: 0.68rem; font-family: var(--font-code); color: #38bdf8; margin-top: 0.2rem;">${p.qr_token || p.reg_code}</div>
+                  </div>
+                </div>
+                <div style="text-align: right;">
+                  <button type="button" class="btn-cta" onclick="window.print()" style="padding: 0.5rem 1rem; font-size: 0.82rem;">
+                    <i class="fa-solid fa-print"></i> พิมพ์บัตร
+                  </button>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      `;
+    } else {
+      errBox.style.display = 'block';
+      errBox.textContent = d.error || 'ไม่พบข้อมูลการลงทะเบียนตามเงื่อนไขที่ระบุ';
+    }
+  } catch (err) {
+    btn.disabled = false;
+    btn.innerHTML = '<span>ค้นหา</span>';
+    errBox.style.display = 'block';
+    errBox.textContent = '❌ ไม่สามารถเชื่อมต่อกับเซิร์ฟเวอร์ กรุณาลองใหม่อีกครั้ง';
+  }
 }
 
 async function loadPublicStats() {
@@ -625,13 +791,18 @@ async function loadPublicStats() {
       const qBar = document.getElementById('reg-quota-bar');
       const pct = Math.min(100, Math.round((d.total / d.capacity) * 100));
 
-      if (qText) qText.textContent = `สมัครแล้ว ${d.total} / ${d.capacity} ท่าน (${pct}%) • เหลืออีก ${Math.max(0, d.capacity - d.total)} ที่นั่ง`;
-      if (qBar) qBar.style.width = `${pct}%`;
+      if (qText) {
+        qText.innerHTML = `สมัครแล้ว <span style="color: #38bdf8;">${d.total}</span> / ${d.capacity} ท่าน (${pct}%) • เหลืออีก <span style="color: #34d399; font-weight: 800;">${Math.max(0, d.capacity - d.total)}</span> ที่นั่ง`;
+      }
+      if (qBar) {
+        qBar.style.width = `${pct}%`;
+      }
     }
   } catch (e) {
     console.log('Stats offline fallback');
   }
 }
+
 
 async function loadPublicParticipants() {
   const tbody = document.getElementById('public-participants-table-body');
@@ -652,7 +823,7 @@ function renderPublicParticipantsTable(list) {
   if (!tbody) return;
 
   if (!list || list.length === 0) {
-    tbody.innerHTML = '<tr><td colspan="6" style="text-align:center; padding:2rem; color:var(--text-dim);">ยังไม่มีรายชื่อผู้สมัคร</td></tr>';
+    tbody.innerHTML = '<tr><td colspan="7" style="text-align:center; padding:2rem; color:var(--text-dim);">ยังไม่มีรายชื่อผู้สมัคร</td></tr>';
     return;
   }
 
@@ -666,10 +837,11 @@ function renderPublicParticipantsTable(list) {
         </span>
       </td>
       <td>${p.school}</td>
+      <td><span style="font-size:0.85rem; color:var(--text-muted);">${p.province || 'จันทบุรี'}</span></td>
       <td>${p.grade_dept || '-'}</td>
       <td>
         <span class="tag-badge" style="background:rgba(16,185,129,0.15); color:#34d399; border-color:rgba(16,185,129,0.3);">
-          ✅ ยืนยันสิทธิ์แล้ว
+          ${p.checked_in ? '✅ เช็คอินแล้ว' : '✅ ยืนยันสิทธิ์แล้ว'}
         </span>
       </td>
     </tr>

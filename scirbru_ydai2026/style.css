@@ -1578,3 +1578,161 @@ input:checked + .toggle-slider:before {
   }
 }
 
+/* ==========================================================================
+   Registration Sub-Tabs & Digital Workshop Pass Card
+   ========================================================================== */
+.reg-subtabs-nav {
+  display: flex;
+  justify-content: center;
+  gap: 0.75rem;
+  margin-bottom: 2rem;
+  flex-wrap: wrap;
+}
+
+.reg-subtab-btn {
+  background: rgba(15, 23, 42, 0.6);
+  border: 1px solid var(--border-color);
+  color: var(--text-muted);
+  padding: 0.65rem 1.4rem;
+  border-radius: 999px;
+  font-family: var(--font-heading);
+  font-size: 0.92rem;
+  font-weight: 600;
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  transition: all 0.3s ease;
+}
+
+.reg-subtab-btn:hover {
+  border-color: var(--primary);
+  color: var(--text-main);
+}
+
+.reg-subtab-btn.active {
+  background: var(--primary-gradient);
+  color: #ffffff;
+  border-color: transparent;
+  box-shadow: 0 4px 18px var(--primary-glow);
+}
+
+.form-category-header {
+  display: flex;
+  align-items: center;
+  gap: 0.6rem;
+  padding: 0.65rem 0.85rem;
+  background: rgba(16, 185, 129, 0.08);
+  border-left: 3px solid #10b981;
+  border-radius: 4px;
+  font-size: 0.95rem;
+  font-weight: 700;
+  color: #34d399;
+  margin: 1.5rem 0 1rem 0;
+}
+
+.form-category-header:first-of-type {
+  margin-top: 0;
+}
+
+/* Cyber Digital Workshop Pass (Boarding Pass / E-Badge) */
+.workshop-pass-card {
+  max-width: 620px;
+  margin: 0 auto;
+  background: linear-gradient(145deg, rgba(15, 23, 42, 0.95), rgba(16, 185, 129, 0.08));
+  border: 2px solid rgba(16, 185, 129, 0.4);
+  border-radius: 20px;
+  box-shadow: 0 16px 40px rgba(0, 0, 0, 0.5), 0 0 30px rgba(16, 185, 129, 0.2);
+  overflow: hidden;
+  position: relative;
+  text-align: left;
+}
+
+.pass-top-bar {
+  background: linear-gradient(90deg, #059669 0%, #0284c7 100%);
+  padding: 1rem 1.5rem;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  color: #ffffff;
+}
+
+.pass-body {
+  padding: 2rem 2rem 1.5rem 2rem;
+}
+
+.pass-code-banner {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  background: rgba(0, 0, 0, 0.35);
+  border: 1px dashed rgba(16, 185, 129, 0.4);
+  border-radius: 12px;
+  padding: 1rem 1.5rem;
+  margin-bottom: 1.5rem;
+}
+
+.pass-details-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 1rem 1.5rem;
+  margin-bottom: 1.5rem;
+  font-size: 0.9rem;
+}
+
+.pass-detail-item .detail-lbl {
+  color: var(--text-dim);
+  font-size: 0.78rem;
+  text-transform: uppercase;
+  margin-bottom: 0.25rem;
+}
+
+.pass-detail-item .detail-val {
+  font-weight: 700;
+  color: var(--text-main);
+}
+
+.pass-perforation {
+  position: relative;
+  border-top: 2px dashed rgba(255, 255, 255, 0.15);
+  margin: 1.5rem -2rem;
+}
+
+.pass-perforation::before, .pass-perforation::after {
+  content: "";
+  position: absolute;
+  top: -12px;
+  width: 24px;
+  height: 24px;
+  background: var(--bg-body);
+  border-radius: 50%;
+}
+
+.pass-perforation::before { left: -12px; }
+.pass-perforation::after { right: -12px; }
+
+.pass-footer-qr {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1.5rem;
+  padding-top: 0.5rem;
+}
+
+@media print {
+  body * {
+    visibility: hidden;
+  }
+  #printable-pass-area, #printable-pass-area * {
+    visibility: visible;
+  }
+  #printable-pass-area {
+    position: absolute;
+    left: 0;
+    top: 0;
+    width: 100%;
+    margin: 0 auto;
+  }
+}
+
+
