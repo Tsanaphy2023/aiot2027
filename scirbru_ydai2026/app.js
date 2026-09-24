@@ -711,10 +711,63 @@ async function loadDynamicCmsContent() {
   }
 }
 
+// Dynamic Multi-stage Hero Ticker Runner (Modeled from AI4Student Project 2026)
+function initHeroTicker() {
+  const ticker = document.getElementById('hero-ticker');
+  if (!ticker) return;
+
+  const tickerSteps = [
+    {
+      text: "🏛️ ศูนย์พัฒนานวัตกรรมเกษตรดิจิทัล มรภ.รำไพพรรณี (SciRBRU)",
+      className: "hero-ticker-badge anim-blink",
+      duration: 3500,
+      color: "#ef4444"
+    },
+    {
+      text: "🌏 LEQs SciRBRU Digital Precision Farming & Deep AI",
+      className: "hero-ticker-badge anim-slide-up",
+      duration: 4000,
+      color: "#06b6d4"
+    },
+    {
+      text: "🚀 iSPACE & SMART FARM: Smart Sensors | ESP32 IoT | Edge Deep Learning | Real-time Dashboard | Virtual Lab",
+      className: "hero-ticker-badge anim-marquee",
+      duration: 20000,
+      color: "#10b981"
+    },
+    {
+      text: "💡 Goal: The Young Digital Agri-Innovator",
+      className: "hero-ticker-badge anim-wobble",
+      duration: 4500,
+      color: "#f59e0b"
+    }
+  ];
+
+  let currentIdx = 0;
+  let timerId = null;
+
+  function runNextStep() {
+    const step = tickerSteps[currentIdx];
+    ticker.className = step.className;
+    ticker.textContent = step.text;
+    ticker.style.color = step.color;
+    ticker.style.borderColor = step.color + '55';
+    ticker.style.boxShadow = `0 4px 16px ${step.color}25`;
+
+    timerId = setTimeout(() => {
+      currentIdx = (currentIdx + 1) % tickerSteps.length;
+      runNextStep();
+    }, step.duration);
+  }
+
+  runNextStep();
+}
+
 // ==========================================================================
 // Initializations
 // ==========================================================================
 document.addEventListener('DOMContentLoaded', () => {
+  initHeroTicker();
   renderQuiz();
   selectCodePreset('arduino_soil');
   updateLabSim();
@@ -722,4 +775,5 @@ document.addEventListener('DOMContentLoaded', () => {
   loadPublicParticipants();
   loadDynamicCmsContent();
 });
+
 

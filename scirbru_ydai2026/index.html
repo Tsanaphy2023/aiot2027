@@ -3,47 +3,120 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-  <title>LEQs SciRBRU Digital Precision Farming & Deep AI — โครงการอบรมเชิงปฏิบัติการสำหรับครูและนักเรียน</title>
+  <title>LEQs SciRBRU Digital Precision Farming & Deep AI | AI Co-Creation for Young Innovators</title>
   <meta name="description" content="โครงการอบรมเชิงปฏิบัติการ AIoT และ Deep Learning ในการเกษตรแม่นยำยุคใหม่ ศูนย์พัฒนานวัตกรรมเกษตรดิจิทัล คณะวิทยาศาสตร์และเทคโนโลยี มหาวิทยาลัยราชภัฏรำไพพรรณี">
+  
+  <!-- Google Fonts (Matching AI4Student_Project2026) -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Sarabun:wght@300;400;500;600;700&family=Kanit:wght@300;400;500;600;700&family=Chakra+Petch:wght@400;600;700&family=Outfit:wght@400;600;700;800&family=Prompt:wght@300;400;500;600;700;800&family=Orbitron:wght@400;700&family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet">
+  
+  <!-- Font Awesome 6 -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  
   <link rel="stylesheet" href="style.css">
 </head>
 <body>
 
-  <!-- ==================== SITE HEADER ==================== -->
+  <!-- ==================== SITE HEADER (Modeled after AI4Student_Project2026) ==================== -->
   <header class="site-header">
     <div class="nav-container">
       
-      <a href="javascript:void(0)" onclick="switchPortalTab('overview')" class="brand-wrapper">
-        <div class="brand-badge-logo">🌱</div>
-        <div>
-          <div class="brand-name">LEQs SciRBRU Digital Precision Farming & Deep AI</div>
-          <div class="brand-dept">คณะวิทยาศาสตร์และเทคโนโลยี มหาวิทยาลัยราชภัฏรำไพพรรณี</div>
+      <!-- Animated Logo & Brand -->
+      <a href="javascript:void(0)" onclick="switchPortalTab('overview')" class="brand-wrapper group">
+        <div class="nav-logo-box">
+          <div class="nav-logo-glow"></div>
+          <div class="nav-logo-avatar" id="navbarLogo">
+            🌿
+          </div>
+          <div class="nav-logo-orbit"></div>
+        </div>
+        <div style="display: flex; flex-direction: column;">
+          <span class="brand-title-text">
+            SciRBRU <span style="font-size: 0.95rem; font-weight: 700; color: #f97316;">iSPACE</span>
+          </span>
+          <span class="brand-sub-badge">
+            Young Digital Agri-Innovator
+          </span>
         </div>
       </a>
 
-      <!-- Navigation Menu -->
+      <!-- Desktop Navigation Menu -->
       <nav>
         <ul class="nav-menu">
-          <li><button class="nav-item-btn active" id="nav-btn-overview" onclick="switchPortalTab('overview')">🏠 หน้าหลัก</button></li>
-          <li><button class="nav-item-btn" id="nav-btn-register" onclick="switchPortalTab('register')">✍️ ลงทะเบียน</button></li>
-          <li><button class="nav-item-btn" id="nav-btn-participants" onclick="switchPortalTab('participants')">📋 รายชื่อผู้สมัคร</button></li>
-          <li><button class="nav-item-btn" id="nav-btn-schedule" onclick="switchPortalTab('schedule')">📅 กำหนดการ</button></li>
-          <li><button class="nav-item-btn" id="nav-btn-lab" onclick="switchPortalTab('lab')">🧪 Virtual Lab</button></li>
-          <li><button class="nav-item-btn" id="nav-btn-code" onclick="switchPortalTab('code')">🧠 AI Coding</button></li>
-          <li><button class="nav-item-btn" id="nav-btn-quiz" onclick="switchPortalTab('quiz')">📝 แบบทดสอบ</button></li>
-          <li><button class="nav-item-btn" id="nav-btn-cert" onclick="switchPortalTab('cert')">📜 เกียรติบัตร</button></li>
-          <li><button class="nav-item-btn" id="nav-btn-team" onclick="switchPortalTab('team')">👥 วิทยากร</button></li>
+          
+          <!-- Home -->
+          <li>
+            <button class="nav-item-btn active" id="nav-btn-overview" onclick="switchPortalTab('overview')">
+              <i class="fa-solid fa-house" style="color: #10b981;"></i> <span>หน้าหลัก</span>
+            </button>
+          </li>
+
+          <!-- Student System Dropdown (From AI4Student) -->
+          <li class="nav-dropdown">
+            <button class="nav-item-btn">
+              <i class="fa-solid fa-user-graduate" style="color: #38bdf8;"></i>
+              <span>ระบบผู้เรียน</span>
+              <i class="fa-solid fa-chevron-down" style="font-size: 0.68rem; margin-left: 0.2rem;"></i>
+            </button>
+            <div class="nav-dropdown-content">
+              <a href="javascript:void(0)" onclick="switchPortalTab('register')" class="nav-dropdown-item">
+                <i class="fa-solid fa-user-plus" style="color: #10b981; width: 20px;"></i>
+                <span>ลงทะเบียน (Register)</span>
+              </a>
+              <a href="javascript:void(0)" onclick="switchPortalTab('participants')" class="nav-dropdown-item">
+                <i class="fa-solid fa-list-check" style="color: #8b5cf6; width: 20px;"></i>
+                <span>ประกาศรายชื่อ (List)</span>
+              </a>
+              <a href="javascript:void(0)" onclick="switchPortalTab('quiz')" class="nav-dropdown-item">
+                <i class="fa-solid fa-file-pen" style="color: #f97316; width: 20px;"></i>
+                <span>แบบทดสอบ Pre/Post</span>
+              </a>
+              <a href="javascript:void(0)" onclick="switchPortalTab('cert')" class="nav-dropdown-item">
+                <i class="fa-solid fa-award" style="color: #ec4899; width: 20px;"></i>
+                <span>เกียรติบัตร (Certificate)</span>
+              </a>
+            </div>
+          </li>
+
+          <!-- Colorful S-M-A-R-T Direct Menu Links -->
+          <li>
+            <button class="nav-item-btn" id="nav-btn-lab" onclick="switchPortalTab('lab')">
+              <span class="nav-letter-s">S</span><span>ensors & Lab</span>
+            </button>
+          </li>
+          <li>
+            <button class="nav-item-btn" id="nav-btn-code" onclick="switchPortalTab('code')">
+              <span class="nav-letter-m">M</span><span>icro Python</span>
+            </button>
+          </li>
+          <li>
+            <button class="nav-item-btn" onclick="switchPortalTab('lab')">
+              <span class="nav-letter-a">A</span><span>I Edge</span>
+            </button>
+          </li>
+          <li>
+            <button class="nav-item-btn" id="nav-btn-schedule" onclick="switchPortalTab('schedule')">
+              <span class="nav-letter-r">R</span><span>oadmap</span>
+            </button>
+          </li>
+          <li>
+            <button class="nav-item-btn" id="nav-btn-team" onclick="switchPortalTab('team')">
+              <span class="nav-letter-t">T</span><span>eam</span>
+            </button>
+          </li>
         </ul>
       </nav>
 
       <!-- Right Action Controls -->
       <div class="nav-right-actions">
         <a href="admin.html" class="btn-secondary" style="font-size:0.82rem; padding:0.45rem 0.85rem;" title="ระบบหลังบ้านและจัดการฐานข้อมูล">
-          <span>⚙️ หลังบ้าน</span>
+          <i class="fa-solid fa-user-shield" style="color: #f97316;"></i>
+          <span>Admin</span>
         </a>
         <a href="http://localhost:8088/" target="_blank" class="btn-cta" title="เปิดแดชบอร์ดควบคุมสดและ AI Studio">
-          <span>📊 แดชบอร์ดสด</span>
-          <span style="font-size:0.9rem;">↗</span>
+          <i class="fa-solid fa-chart-line"></i>
+          <span>Dashboard</span>
         </a>
         <button class="btn-icon-toggle" id="theme-toggle-btn" onclick="toggleTheme()" title="สลับโหมดมืด/สว่าง">
           <span id="theme-icon">🌓</span>
@@ -72,143 +145,352 @@
         </button>
       </div>
 
-      <!-- Hero Banner -->
-      <div class="hero-banner">
-        <div class="hero-pill-tag">
-          <span>🚀</span>
-          <span>โครงการอบรมเชิงปฏิบัติการเข้มข้น 2 วัน (16 ชั่วโมง)</span>
-        </div>
-        <h1 class="hero-title">
-          สร้าง ยุวนวัตกรเกษตรแม่นยำ ด้วย<br>
-          <span class="grad">AIoT & Deep Learning Edge Intelligence</span>
-        </h1>
-        <p class="hero-subtitle">
-          เปิดโลกการเรียนรู้ด้านวิทยาศาสตร์และเทคโนโลยีการเกษตรยุคใหม่สำหรับคุณครูและนักเรียน 
-          ลงมือประกอบชุดทดลอง Smart Farm Kit จริง เขียนโค้ดไมโครคอนโทรลเลอร์ ESP32 
-          เชื่อมต่อเซนเซอร์ดินและอากาศ ส่งข้อมูลขึ้นคลาวด์ พร้อมประยุกต์ใช้โครงข่ายประสาทเทียม (Deep Learning) พยากรณ์และรดน้ำอัตโนมัติ
-        </p>
+      <!-- Hero Section (2-Column Floating Layout from AI4Student_Project2026) -->
+      <div class="hero-container">
+        <div class="hero-2col-layout">
+          
+          <!-- Left Column: Floating Animated Visual Card with Aura Glow -->
+          <div class="hero-image-col">
+            <div class="hero-aura-glow"></div>
+            <div class="hero-visual-card">
+              <!-- High-Tech Farm & AI SVG Vector Canvas -->
+              <div style="position: relative; width: 100%; height: 320px; border-radius: 1.5rem; overflow: hidden; background: linear-gradient(135deg, #091224 0%, #0d1b38 100%); border: 1px solid rgba(255, 255, 255, 0.12); display: flex; align-items: center; justify-content: center;">
+                
+                <svg viewBox="0 0 460 300" style="width: 100%; height: 100%;" fill="none" xmlns="http://www.w3.org/2000/svg">
+                  <!-- Circuit Grid Pattern -->
+                  <defs>
+                    <pattern id="circuitGrid" width="30" height="30" patternUnits="userSpaceOnUse">
+                      <path d="M 30 0 L 0 0 0 30" fill="none" stroke="rgba(56, 189, 248, 0.08)" stroke-width="1"/>
+                      <circle cx="0" cy="0" r="1.5" fill="rgba(16, 185, 129, 0.2)"/>
+                    </pattern>
+                    <linearGradient id="aiGlow" x1="0%" y1="0%" x2="100%" y2="100%">
+                      <stop offset="0%" stop-color="#10b981"/>
+                      <stop offset="50%" stop-color="#0ea5e9"/>
+                      <stop offset="100%" stop-color="#8b5cf6"/>
+                    </linearGradient>
+                  </defs>
+                  <rect width="100%" height="100%" fill="url(#circuitGrid)"/>
 
-        <!-- Stats Grid -->
-        <div class="hero-stats-grid">
-          <div class="stat-pill">
-            <div class="stat-icon">🎓</div>
-            <div>
-              <div class="stat-val">ครู & นักเรียน 60 คน</div>
-              <div class="stat-label">กลุ่มเป้าหมายผู้เข้ารับการอบรม</div>
-            </div>
-          </div>
-          <div class="stat-pill">
-            <div class="stat-icon">🤖</div>
-            <div>
-              <div class="stat-val">ESP32 + 5 เซนเซอร์</div>
-              <div class="stat-label">ชุดปฏิบัติการ Smart Farm ประจำกลุ่ม</div>
-            </div>
-          </div>
-          <div class="stat-pill">
-            <div class="stat-icon">🧠</div>
-            <div>
-              <div class="stat-val">Deep Learning Edge AI</div>
-              <div class="stat-label">พยากรณ์ความชื้นล่วงหน้า 3 ชั่วโมง</div>
-            </div>
-          </div>
-          <div class="stat-pill">
-            <div class="stat-icon">📜</div>
-            <div>
-              <div class="stat-val">เกียรติบัตรรับรอง</div>
-              <div class="stat-label">จากคณะวิทย์ฯ มรภ.รำไพพรรณี</div>
-            </div>
-          </div>
-        </div>
+                  <!-- Central Chip: ESP32 + AI Neural Core -->
+                  <rect x="150" y="70" width="160" height="150" rx="16" fill="#0f172a" stroke="url(#aiGlow)" stroke-width="2.5"/>
+                  <rect x="165" y="85" width="130" height="120" rx="10" fill="rgba(16, 185, 129, 0.08)" stroke="rgba(16, 185, 129, 0.3)" stroke-width="1.5"/>
 
-        <!-- Hero Actions -->
-        <div class="hero-actions">
-          <button class="btn-cta" onclick="switchPortalTab('schedule')">
-            <span>📅 ตรวจสอบกำหนดการอบรม</span>
-          </button>
-          <button class="btn-secondary" onclick="switchPortalTab('lab')">
-            <span>🧪 เข้าสู่ห้องทดลองเสมือน Virtual Lab</span>
-          </button>
-          <button class="btn-secondary" onclick="switchPortalTab('code')">
-            <span>💻 โค้ดตัวอย่าง ESP32 & Deep AI</span>
-          </button>
+                  <!-- Glowing AI Brain Core -->
+                  <circle cx="230" cy="140" r="32" fill="url(#aiGlow)" opacity="0.25"/>
+                  <circle cx="230" cy="140" r="24" fill="none" stroke="#10b981" stroke-width="2" stroke-dasharray="4 2"/>
+                  <text x="230" y="146" text-anchor="middle" font-size="22" fill="#ffffff">🧠</text>
+
+                  <!-- Chip Pins (Left & Right) -->
+                  <g fill="#38bdf8" opacity="0.75">
+                    <rect x="140" y="90" width="10" height="4" rx="2"/>
+                    <rect x="140" y="105" width="10" height="4" rx="2"/>
+                    <rect x="140" y="120" width="10" height="4" rx="2"/>
+                    <rect x="140" y="135" width="10" height="4" rx="2"/>
+                    <rect x="140" y="150" width="10" height="4" rx="2"/>
+                    <rect x="140" y="165" width="10" height="4" rx="2"/>
+                    <rect x="140" y="180" width="10" height="4" rx="2"/>
+
+                    <rect x="310" y="90" width="10" height="4" rx="2"/>
+                    <rect x="310" y="105" width="10" height="4" rx="2"/>
+                    <rect x="310" y="120" width="10" height="4" rx="2"/>
+                    <rect x="310" y="135" width="10" height="4" rx="2"/>
+                    <rect x="310" y="150" width="10" height="4" rx="2"/>
+                    <rect x="310" y="165" width="10" height="4" rx="2"/>
+                    <rect x="310" y="180" width="10" height="4" rx="2"/>
+                  </g>
+
+                  <!-- Dynamic Circuit Traces -->
+                  <path d="M 140 105 L 80 105 L 80 60 L 50 60" stroke="#38bdf8" stroke-width="1.8" fill="none" opacity="0.6"/>
+                  <circle cx="50" cy="60" r="5" fill="#38bdf8"/>
+                  <text x="50" y="45" text-anchor="middle" font-size="10" font-family="'JetBrains Mono', monospace" fill="#38bdf8">DHT22</text>
+
+                  <path d="M 140 165 L 70 165 L 70 230 L 40 230" stroke="#10b981" stroke-width="1.8" fill="none" opacity="0.6"/>
+                  <circle cx="40" cy="230" r="5" fill="#10b981"/>
+                  <text x="40" y="250" text-anchor="middle" font-size="10" font-family="'JetBrains Mono', monospace" fill="#10b981">SOIL_ADC</text>
+
+                  <path d="M 310 105 L 380 105 L 380 60 L 410 60" stroke="#f97316" stroke-width="1.8" fill="none" opacity="0.6"/>
+                  <circle cx="410" cy="60" r="5" fill="#f97316"/>
+                  <text x="410" y="45" text-anchor="middle" font-size="10" font-family="'JetBrains Mono', monospace" fill="#f97316">RELAY_PUMP</text>
+
+                  <path d="M 310 165 L 390 165 L 390 230 L 420 230" stroke="#8b5cf6" stroke-width="1.8" fill="none" opacity="0.6"/>
+                  <circle cx="420" cy="230" r="5" fill="#8b5cf6"/>
+                  <text x="420" y="250" text-anchor="middle" font-size="10" font-family="'JetBrains Mono', monospace" fill="#8b5cf6">WIFI_MQTT</text>
+
+                  <text x="230" y="195" text-anchor="middle" font-size="11" font-family="'Outfit', sans-serif" font-weight="700" fill="#34d399">ESP32 AI EDGE</text>
+                </svg>
+
+              </div>
+
+              <!-- Floating Tag Badges -->
+              <div style="display: flex; gap: 0.6rem; flex-wrap: wrap; margin-top: 1.25rem; justify-content: center;">
+                <span class="tag-badge" style="background: rgba(16, 185, 129, 0.15); border-color: rgba(16, 185, 129, 0.35); color: #34d399;">
+                  🌱 Capacitive Sensor
+                </span>
+                <span class="tag-badge" style="background: rgba(14, 165, 233, 0.15); border-color: rgba(14, 165, 233, 0.35); color: #38bdf8;">
+                  ⚡ 60 FPS Virtual Lab
+                </span>
+                <span class="tag-badge" style="background: rgba(139, 92, 246, 0.15); border-color: rgba(139, 92, 246, 0.35); color: #c084fc;">
+                  🔮 Deep Learning Edge
+                </span>
+              </div>
+            </div>
+          </div>
+
+          <!-- Right Column: Text Content & Dynamic Ticker -->
+          <div class="hero-text-col">
+            
+            <!-- Hero Animated Ticker Container (From AI4Student) -->
+            <div class="hero-ticker-container">
+              <span id="hero-ticker" class="hero-ticker-badge text-red-500 anim-blink">
+                🏛️ ศูนย์พัฒนานวัตกรรมเกษตรดิจิทัล มรภ.รำไพพรรณี (SciRBRU)
+              </span>
+            </div>
+
+            <!-- Main Heading with Gradient Text -->
+            <h1 class="hero-title">
+              สร้าง ยุวนวัตกรเกษตรแม่นยำ ด้วย<br>
+              <span class="grad">AIoT & Deep Learning Edge Intelligence</span>
+            </h1>
+
+            <p class="hero-subtitle">
+              กิจกรรมบูรณาการวิทยาศาสตร์และปัญญาประดิษฐ์สำหรับครูและนักเรียน 
+              ลงมือประกอบชุดทดลอง <b>Smart Farm Kit</b> จริง เขียนโค้ดไมโครคอนโทรลเลอร์ <b>ESP32</b> 
+              ตรวจวัดดินด้วยเซนเซอร์ความแม่นยำสูง เชื่อมต่อแดชบอร์ดเรียลไทม์ 
+              และประยุกต์ใช้โมเดลโครงข่ายประสาทเทียมสั่งการรดน้ำอัตโนมัติ
+            </p>
+
+            <!-- Stats Grid -->
+            <div class="hero-stats-grid">
+              <div class="stat-pill">
+                <div class="stat-icon">🎓</div>
+                <div>
+                  <div class="stat-val">60 ที่นั่ง</div>
+                  <div class="stat-label">โควตาครู & นักเรียน</div>
+                </div>
+              </div>
+              <div class="stat-pill">
+                <div class="stat-icon">🤖</div>
+                <div>
+                  <div class="stat-val">ESP32 + 5 เซนเซอร์</div>
+                  <div class="stat-label">ชุดปฏิบัติการ Smart Farm</div>
+                </div>
+              </div>
+              <div class="stat-pill">
+                <div class="stat-icon">🧠</div>
+                <div>
+                  <div class="stat-val">Edge Deep AI</div>
+                  <div class="stat-label">พยากรณ์ความชื้นแม่นยำ</div>
+                </div>
+              </div>
+              <div class="stat-pill">
+                <div class="stat-icon">📜</div>
+                <div>
+                  <div class="stat-val">เกียรติบัตรรับรอง</div>
+                  <div class="stat-label">คณะวิทย์ฯ มรภ.รำไพพรรณี</div>
+                </div>
+              </div>
+            </div>
+
+            <!-- Hero Action Buttons -->
+            <div class="hero-actions">
+              <button class="btn-cta" onclick="switchPortalTab('register')" style="padding: 0.8rem 1.75rem; font-size: 1rem;">
+                <i class="fa-solid fa-user-plus"></i>
+                <span>ลงทะเบียนเข้าร่วมอบรม</span>
+              </button>
+              <button class="btn-secondary" onclick="switchPortalTab('lab')">
+                <i class="fa-solid fa-gamepad" style="color: #38bdf8;"></i>
+                <span>ทดลอง Virtual Farm Lab</span>
+              </button>
+              <button class="btn-secondary" onclick="switchPortalTab('code')">
+                <i class="fa-solid fa-code" style="color: #10b981;"></i>
+                <span>คลังโค้ด ESP32</span>
+              </button>
+              <button class="btn-secondary" onclick="switchPortalTab('participants')">
+                <i class="fa-solid fa-list-check" style="color: #8b5cf6;"></i>
+                <span>ตรวจสอบรายชื่อ</span>
+              </button>
+            </div>
+
+          </div>
+
         </div>
       </div>
 
-      <!-- 3 Pillars of Innovation -->
+      <!-- ==============================================================
+           THE S.M.A.R.T. FRAMEWORK (Exact 6-Card Grid from AI4Student iSPACE)
+           ============================================================== -->
+      <section class="framework-section">
+        
+        <div class="section-header">
+          <span style="color: #f97316; font-weight: 800; text-transform: uppercase; letter-spacing: 0.1em; font-size: 0.85rem;">Curriculum Model</span>
+          <h2 class="section-title" style="font-family: var(--font-heading); font-size: 2.35rem; margin-top: 0.25rem;">The S.M.A.R.T. Agri-AI Framework</h2>
+          <p class="section-desc">กิจกรรมบูรณาการวิทยาศาสตร์เกษตรดิจิทัลและปัญญาประดิษฐ์เพื่อสร้างนักนวัตกรรมรุ่นเยาว์</p>
+        </div>
+
+        <!-- 6 Colorful Glass Cards Grid -->
+        <div class="framework-grid">
+          
+          <!-- S -->
+          <div class="framework-card border-b-red">
+            <div class="framework-letter" style="background: linear-gradient(135deg, #ef4444 0%, #dc2626 100%); -webkit-background-clip: text; -webkit-text-fill-color: transparent;">
+              S
+            </div>
+            <h3 class="framework-title">Smart Sensors</h3>
+            <p class="framework-desc">
+              เซนเซอร์วัดความชื้นดิน Capacitive, DHT22 อุณหภูมิ และแสงแดด Lux แบบเรียลไทม์ 🔬
+            </p>
+          </div>
+
+          <!-- M -->
+          <div class="framework-card border-b-orange">
+            <div class="framework-letter" style="background: linear-gradient(135deg, #f97316 0%, #ea580c 100%); -webkit-background-clip: text; -webkit-text-fill-color: transparent;">
+              M
+            </div>
+            <h3 class="framework-title">Microcontroller ESP32</h3>
+            <p class="framework-desc">
+              เขียนโค้ดภาษา C++ และ MicroPython สั่งการบอร์ดสมองกลฝังตัว FreeRTOS ⚡
+            </p>
+          </div>
+
+          <!-- A -->
+          <div class="framework-card border-b-yellow">
+            <div class="framework-letter" style="background: linear-gradient(135deg, #eab308 0%, #ca8a04 100%); -webkit-background-clip: text; -webkit-text-fill-color: transparent;">
+              A
+            </div>
+            <h3 class="framework-title">AI & Deep Learning</h3>
+            <p class="framework-desc">
+              ประยุกต์ใช้โครงข่ายประสาทเทียมพยากรณ์ความต้องการน้ำและการเจริญเติบโต 🧠
+            </p>
+          </div>
+
+          <!-- R -->
+          <div class="framework-card border-b-green">
+            <div class="framework-letter" style="background: linear-gradient(135deg, #22c55e 0%, #16a34a 100%); -webkit-background-clip: text; -webkit-text-fill-color: transparent;">
+              R
+            </div>
+            <h3 class="framework-title">Realtime Farm Cloud</h3>
+            <p class="framework-desc">
+              ส่งข้อมูลตรวจวัดขึ้นคลาวด์และแสดงผลบน Smart Farm Dashboard 24 ชม. 🌐
+            </p>
+          </div>
+
+          <!-- T -->
+          <div class="framework-card border-b-blue">
+            <div class="framework-letter" style="background: linear-gradient(135deg, #3b82f6 0%, #2563eb 100%); -webkit-background-clip: text; -webkit-text-fill-color: transparent;">
+              T
+            </div>
+            <h3 class="framework-title">Technology Automation</h3>
+            <p class="framework-desc">
+              ควบคุมวาล์วให้น้ำ ปั๊ม 5V หัวพ่นหมอก และพัดลมระบายอากาศอัตโนมัติ 🌀
+            </p>
+          </div>
+
+          <!-- + -->
+          <div class="framework-card border-b-purple">
+            <div class="framework-letter" style="background: linear-gradient(135deg, #a855f7 0%, #9333ea 100%); -webkit-background-clip: text; -webkit-text-fill-color: transparent;">
+              +
+            </div>
+            <h3 class="framework-title">Precision Innovation</h3>
+            <p class="framework-desc">
+              ต่อยอดสู่โครงงานนวัตกรรมสิ่งประดิษฐ์ ยกระดับผลผลิตการเกษตรอย่างยั่งยืน 🌱
+            </p>
+          </div>
+
+        </div>
+
+        <!-- i-SMART Innovator Goal Banner (From AI4Student) -->
+        <div class="goal-banner">
+          <h3 style="font-family: var(--font-heading); font-size: 1.85rem; font-weight: 800; margin-bottom: 0.5rem; color: #fde047;">
+            Goal: The i-SMART Innovator 💡
+          </h3>
+          <p style="color: #cbd5e1; font-size: 0.98rem; max-width: 650px; margin: 0 auto;">
+            สร้างนักนวัตกรรมรุ่นเยาว์ที่มีทักษะบูรณาการครบทุกมิติ พร้อมก้าวสู่การเป็นผู้สร้างสรรค์เทคโนโลยีในอนาคต
+          </p>
+
+          <div class="goal-pills">
+            <span class="goal-pill"><span class="goal-letter">i</span> - Intelligence (AI Literacy)</span>
+            <span class="goal-pill"><span class="goal-letter">S</span> - Scientific Methodology</span>
+            <span class="goal-pill"><span class="goal-letter">M</span> - Modern Automation</span>
+            <span class="goal-pill"><span class="goal-letter">A</span> - Agri-Tech Application</span>
+            <span class="goal-pill"><span class="goal-letter">R</span> - Real-world Data</span>
+            <span class="goal-pill"><span class="goal-letter">T</span> - Teamwork & Innovation</span>
+          </div>
+        </div>
+
+      </section>
+
+      <!-- ==============================================================
+           CHAPTER HIGHLIGHTS (Modeled after AI4Student Chapters 1-5)
+           ============================================================== -->
       <div class="section-header">
-        <div class="section-badge">Core Pillars</div>
-        <h2 class="section-title">3 หัวใจหลักของชุดการเรียนรู้ LEQs SciRBRU</h2>
-        <p class="section-desc">ออกแบบขึ้นเพื่อการเรียนรู้ที่เข้าใจง่าย สนุก ได้ผลสัมฤทธิ์จริง และพร้อมต่อยอดโครงงานนวัตกรรมสิ่งประดิษฐ์</p>
+        <span style="color: var(--primary); font-weight: 800; text-transform: uppercase; letter-spacing: 0.1em; font-size: 0.85rem;">Learning Pathways</span>
+        <h2 class="section-title">เนื้อหาการฝึกอบรม 5 บทเรียนหลัก (Chapter 1 - 5)</h2>
+        <p class="section-desc">ถ่ายทอดองค์ความรู้จากทีมคณาจารย์และผู้เชี่ยวชาญ คณะวิทยาศาสตร์และเทคโนโลยี มรภ.รำไพพรรณี</p>
       </div>
 
       <div class="pillars-grid">
+        
         <div class="pillar-card">
-          <div class="pillar-icon-box">🛠️</div>
-          <h3 class="pillar-title">1. Easy Setup & Modular Assembly</h3>
+          <div class="pillar-icon-box">🔬</div>
+          <h3 class="pillar-title">Chapter 1: SmartScience (Lab in Your Pocket)</h3>
           <p class="pillar-desc">
-            ติดตั้งง่าย ปลอดภัย ไม่ต้องใช้หัวแร้งบัดกรี ทุกชิ้นส่วนเป็นโมดูลาร์พร้อมสายไฟแยกรหัสสี มีคู่มือขั้นตอนประกอบทีละสเต็ป พร้อมฐานอะคริลิกเลเซอร์คัตที่แข็งแรงสวยงาม
+            เปลี่ยนสมาร์ตโฟนและเซนเซอร์ให้เป็นห้องทดลองเคลื่อนที่ เรียนรู้วิธีการใช้เซนเซอร์วัดค่าความชื้นในดิน อุณหภูมิ และแสงแดดอย่างแม่นยำ
           </p>
-          <div class="pillar-tags">
-            <span class="tag-badge">No Soldering</span>
-            <span class="tag-badge">Color-Coded Wires</span>
-            <span class="tag-badge">Breadboard Safe</span>
-          </div>
         </div>
 
         <div class="pillar-card">
-          <div class="pillar-icon-box">📡</div>
-          <h3 class="pillar-title">2. Real Sensors & Edge AI</h3>
+          <div class="pillar-icon-box">🐍</div>
+          <h3 class="pillar-title">Chapter 2: ESP32 Firmware & MicroPython</h3>
           <p class="pillar-desc">
-            เรียนรู้การทำงานของเซนเซอร์จริง ทั้ง Capacitive Soil Moisture กันสนิม, DHT22 อุณหภูมิความชื้น, แสงแดด Lux พร้อมการรันโมเดล Deep Learning (Inference) บนชิป ESP32 โดยตรง
+            ก้าวสู่โลกแห่งสมองกลฝังตัว! เขียนโค้ดภาษา MicroPython และ C++ อ่านสัญญาณเซนเซอร์ และควบคุมอุปกรณ์ไฟฟ้าผ่าน Relay Switch
           </p>
-          <div class="pillar-tags">
-            <span class="tag-badge">Capacitive Sensor</span>
-            <span class="tag-badge">DHT22 Precision</span>
-            <span class="tag-badge">Edge Weights C-Header</span>
-          </div>
+        </div>
+
+        <div class="pillar-card">
+          <div class="pillar-icon-box">🌱</div>
+          <h3 class="pillar-title">Chapter 3: AI-IoT and Digital Agriculture Tech+</h3>
+          <p class="pillar-desc">
+            เกษตรอัจฉริยะยุคใหม่! เชื่อมต่อบอร์ดสู่อุปกรณ์เครือข่าย Wi-Fi และ LoRaWAN ตรวจวัดสภาพแวดล้อมในแปลงเกษตรแบบเรียลไทม์
+          </p>
         </div>
 
         <div class="pillar-card">
           <div class="pillar-icon-box">🌐</div>
-          <h3 class="pillar-title">3. Web & Cloud Precision Control</h3>
+          <h3 class="pillar-title">Chapter 4: Real-time Cloud Telemetry & Home Assistant</h3>
           <p class="pillar-desc">
-            ควบคุมระบบรดน้ำ ปั๊ม พัดลมระบายอากาศผ่าน Web Application และ Dashboard ได้จากทุกอุปกรณ์ทั้งสมาร์ตโฟน แท็บเล็ต และคอมพิวเตอร์ พร้อมระบบแจ้งเตือน LINE Notify
+            การสร้าง Smart Farm Dashboard แสดงผลกราฟสด แจ้งเตือนสภาวะผิดปกติ และสั่งการปั๊มน้ำ พัดลมระบายอากาศผ่านอินเทอร์เน็ต
           </p>
-          <div class="pillar-tags">
-            <span class="tag-badge">Modern PWA</span>
-            <span class="tag-badge">Home Assistant</span>
-            <span class="tag-badge">REST API / MQTT</span>
-          </div>
         </div>
-      </div>
 
-      <!-- 4 Core Learning Modules -->
-      <div class="section-header">
-        <div class="section-badge">Curriculum Modules</div>
-        <h2 class="section-title">4 โมดูลการเรียนรู้ภาคปฏิบัติ (Hands-on Labs)</h2>
-        <p class="section-desc">ครอบคลุมกระบวนการตั้งแต่ระดับฮาร์ดแวร์พื้นฐานจนถึงปัญญาประดิษฐ์ขั้นสูง</p>
-      </div>
+        <div class="pillar-card">
+          <div class="pillar-icon-box">🔮</div>
+          <h3 class="pillar-title">Chapter 5: Deep Learning on Edge (Crop Health)</h3>
+          <p class="pillar-desc">
+            เทคโนโลยีปัญญาประดิษฐ์เพื่อการเกษตร! เทรนโครงข่ายประสาทเทียมทำนายค่าความต้องการน้ำ และวิเคราะห์โรคพืชด้วย Computer Vision
+          </p>
+        </div>
 
-      <div class="pillars-grid" style="grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));">
-        <div class="pillar-card">
-          <h3 class="pillar-title">โมดูล 1: ฮาร์ดแวร์และการประกอบ</h3>
-          <p class="pillar-desc">รู้จักสถาปัตยกรรมบอร์ด ESP32, วงจรไฟฟ้าเบื้องต้น, การต่อวงจรเซนเซอร์ดิน, อุณหภูมิ และโมดูลรีเลย์ควบคุมน้ำ</p>
+        <div class="pillar-card" style="border-color: rgba(249, 115, 22, 0.4); background: rgba(249, 115, 22, 0.05);">
+          <div class="pillar-icon-box" style="background: rgba(249, 115, 22, 0.15); border-color: rgba(249, 115, 22, 0.3);">🚀</div>
+          <h3 class="pillar-title" style="color: #f97316;">Capstone: Mini Hackathon & Exhibition</h3>
+          <p class="pillar-desc">
+            ประลองไอเดียโครงงานสิ่งประดิษฐ์เกษตรดิจิทัล นำเสนอผลงานต่อคณะกรรมการ และรับมอบเกียรติบัตรออนไลน์สำหรับผู้ผ่านการอบรม
+          </p>
         </div>
-        <div class="pillar-card">
-          <h3 class="pillar-title">โมดูล 2: การเขียนโค้ดและอ่านเซนเซอร์</h3>
-          <p class="pillar-desc">การใช้ Arduino IDE / MicroPython อ่านสัญญาณ Analog/Digital, แปลงค่า ADC, และสอบเทียบความชื้นในดิน (Calibration)</p>
-        </div>
-        <div class="pillar-card">
-          <h3 class="pillar-title">โมดูล 3: แดชบอร์ดและเครือข่ายไร้สาย</h3>
-          <p class="pillar-desc">เชื่อมต่อ Wi-Fi, ส่งข้อมูลเข้า REST API, ควบคุมอุปกรณ์ผ่านสวิตช์บนมือถือ และระบบอัตโนมัติแจ้งเตือนผ่าน LINE Notify</p>
-        </div>
-        <div class="pillar-card">
-          <h3 class="pillar-title">โมดูล 4: Deep Learning & Edge AI</h3>
-          <p class="pillar-desc">เก็บรวบรวม Dataset, เทรนโมเดลโครงข่ายประสาทเทียมผ่าน AI Studio, และส่งออกไฟล์โมเดลไปสั่งการรดน้ำอัตโนมัติบนบอร์ด</p>
-        </div>
+
       </div>
 
     </section>
+
+    <!-- ==============================================================
+         TAB 2: INTERACTIVE SCHEDULE (2 DAYS)
+         ============================================================== -->
+    <section class="tab-pane" id="tab-schedule">
+      <div class="section-header">
+        <div class="section-badge">Workshop Schedule</div>
+        <h2 class="section-title">กำหนดการฝึกอบรมเชิงปฏิบัติการ (2 วัน 16 ชั่วโมง)</h2>
+        <p class="section-desc">ตารางกิจกรรมการเรียนรู้แบบ Active Learning ผสานทฤษฎีและลงมือปฏิบัติจริง</p>
+
 
     <!-- ==============================================================
          TAB 2: INTERACTIVE SCHEDULE (2 DAYS)
