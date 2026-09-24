@@ -1,0 +1,184 @@
+\chapter{คอมพิวเตอร์วิทัศน์และสวนศาสตร์เคาะเสียงจำแนกความสุกแก่ทุเรียน}
+\label{chap:ch04}
+
+\section*{แผนบริหารการสอนประจำบทที่ 4}
+\addcontentsline{toc}{section}{แผนบริหารการสอนประจำบทที่ 4}
+
+\begin{planbox}{หัวข้อเนื้อหาประจำบท}
+\begin{enumerate}[topsep=2pt, itemsep=1pt, partopsep=0pt, parsep=0pt, leftmargin=1.5em]
+    \item ปัญหาการตัดทุเรียนอ่อนและมาตรฐานเปอร์เซ็นต์น้ำหนักเนื้อแห้งเพื่อการส่งออก
+    \item การวิเคราะห์สเปซสีและข้อจำกัดของระบบสี RGB ภายใต้สภาพแสงเงาหน้างาน
+    \item การแปลงระบบสี HSV และการสกัดรอยแยกสีร่องพูของหนามทุเรียนด้วยคอมพิวเตอร์วิทัศน์
+    \item ฟิสิกส์การสั่นพ้องทางสวนศาสตร์และสเปกตรัมความถี่การเคาะผลทุเรียน
+    \item การแปลงฟูเรียร์อย่างเร็วและโมเดลบูรณาการพหุรูปแบบเพื่อจำแนกความสุกแก่
+\end{enumerate}
+\end{planbox}
+
+\begin{planbox}{วัตถุประสงค์เชิงพฤติกรรม}
+\begin{enumerate}[topsep=2pt, itemsep=1pt, partopsep=0pt, parsep=0pt, leftmargin=1.5em]
+    \item ระบุเกณฑ์มาตรฐานเปอร์เซ็นต์เนื้อแห้งขั้นต่ำของทุเรียนพันธุ์หมอนทองและชะนีได้อย่างถูกต้อง
+    \item อธิบายข้อแตกต่างและประโยชน์ของการแปลงสเปซสีจาก RGB ไปเป็น HSV ได้อย่างแม่นยำ
+    \item เขียนโปรแกรมประมวลผลภาพเพื่อหาอัตราส่วนสีน้ำตาลอมเหลืองบริเวณร่องหนามทุเรียนได้
+    \item วิเคราะห์ความถี่เรโซแนนซ์ธรรมชาติจากการเคาะผลทุเรียนด้วยอัลกอริทึม FFT ได้อย่างถูกต้อง
+\end{enumerate}
+\end{planbox}
+
+\newpage
+
+\begin{planbox}{วิธีสอนและกิจกรรมการเรียนการสอน}
+\begin{enumerate}[topsep=2pt, itemsep=1pt, partopsep=0pt, parsep=0pt, leftmargin=1.5em]
+    \item บรรยายหลักการเคมีกายภาพการสะสมแป้งในเนื้อทุเรียนและทฤษฎีการสั่นสะเทือนทางกล
+    \item สาธิตการถ่ายภาพผลทุเรียนจริงบนสายพานลำเลียงและการตัดค่าสีผ่าน OpenCV
+    \item ปฏิบัติการทดลองบันทึกเสียงเคาะทุเรียนต่างระดับความสุกด้วยไมโครโฟนความไวสูง
+    \item วิเคราะห์กราฟสเปกตรัมความถี่และคำนวณเปอร์เซ็นต์เนื้อแห้งเปรียบเทียบกับการอบแห้งในเตา
+\end{enumerate}
+\end{planbox}
+
+\begin{planbox}{สื่อการเรียนการสอน}
+\begin{enumerate}[topsep=2pt, itemsep=1pt, partopsep=0pt, parsep=0pt, leftmargin=1.5em]
+    \item เอกสารคำสอนบทที่ 4 สไลด์นำเสนอ และชุดตัวอย่างภาพถ่ายทุเรียนหลากระดับความสุก
+    \item กล้องดิจิทัลอุตสาหกรรม USB และไฟส่องสว่างวงแหวน LED อุณหภูมิสีคงที่
+    \item ไมโครโฟนคอนเดนเซอร์ I2S หรือ USB พร้อมไม้เคาะทุเรียนปลายยางมาตรฐาน
+    \item ซอฟต์แวร์ประมวลผลสัญญาณเสียงและภาพ Python (OpenCV และ SciPy)
+\end{enumerate}
+\end{planbox}
+
+\begin{planbox}{การวัดและประเมินผล}
+\begin{enumerate}[topsep=2pt, itemsep=1pt, partopsep=0pt, parsep=0pt, leftmargin=1.5em]
+    \item การทดสอบความรู้เรื่องการตัดแยกช่วงสี HSV และการประมวลผลความถี่เสียง
+    \item การประเมินผลงานโค้ดตัดภาพร่องพูทุเรียนและการหาค่าความถี่เรโซแนนซ์
+    \item การประเมินความแม่นยำในการจำแนกทุเรียนแก่และทุเรียนอ่อนจากชุดข้อมูลทดสอบ
+\end{enumerate}
+\end{planbox}
+
+\clearpage
+
+\section{ปัญหาทุเรียนอ่อนและเกณฑ์มาตรฐานน้ำหนักเนื้อแห้ง}
+
+ปัญหา \textbf{ทุเรียนอ่อน (Premature Durian)\index{ทุเรียนอ่อน (Premature Durian)}\index{Premature Durian}} ถือเป็นวิกฤติร้ายแรงของห่วงโซ่อุปทานส่งออกผลไม้ไทย การเก็บเกี่ยวทุเรียนก่อนถึงระยะสุกแก่ทางสรีรวิทยาทำให้เนื้อทุเรียนไม่มีการเปลี่ยนรูปจากแป้งเป็นน้ำตาล เนื้อแข็งกระด้าง ไม่มีกลิ่นหอมเฉพาะตัว และไม่สามารถบ่มให้สุกได้
+
+ตามมาตรฐานสินค้าเกษตรแห่งชาติ (มกษ. 3-2556) กำหนดเกณฑ์ \textbf{เปอร์เซ็นต์น้ำหนักเนื้อแห้งขั้นต่ำ (Dry Matter Percentage หรือ \%DM)} สำหรับทุเรียนแต่ละสายพันธุ์ดังนี้
+\begin{itemize}[leftmargin=1.5em]
+    \item พันธุ์หมอนทอง (*Monthong*) ต้องมีเนื้อแห้งไม่น้อยกว่าร้อยละ 32
+    \item พันธุ์ชะนี (*Chanee*) ต้องมีเนื้อแห้งไม่น้อยกว่าร้อยละ 30
+    \item พันธุ์กระดุมทอง (*Kradum Thong*) ต้องมีเนื้อแห้งไม่น้อยกว่าร้อยละ 27
+    \item พันธุ์ก้านยาว (*Kan Yao*) ต้องมีเนื้อแห้งไม่น้อยกว่าร้อยละ 32
+\end{itemize}
+
+วิธีมาตรฐานดั้งเดิมต้องใช้การเจาะเนื้อผลไม้ไปอบแห้งในตู้อบที่อุณหภูมิ $105\,^\circ\text{C}$ เป็นเวลา $4 - 6\text{ ชั่วโมง}$ ซึ่งเป็นการทำลายผลผลิต (Destructive Testing) และไม่สามารถตรวจวัดผลผลิตได้ทุกผลบนสายพาน
+
+\section{การวิเคราะห์ความสุกแก่ด้วยคอมพิวเตอร์วิทัศน์}
+
+การเปลี่ยนแปลงภายนอกของผลทุเรียนเมื่อเข้าสู่ระยะสุกแก่ทางสรีรวิทยา จะเกิดการขยายตัวของพู ส่งผลให้ร่องระหว่างหนาม (Inter-thorn Grooves) แยกตัวออกจากกัน และเนื้อเยื่อบริเวณร่องพูเปลี่ยนสีจากสีเขียวเข้มไปเป็นสีน้ำตาลอมเหลืองหรือสีฟางข้าว
+
+\subsection{ข้อจำกัดของระบบสี RGB และการแปลงสู่สเปซสี HSV}
+
+การประมวลผลภาพบนสายพานลำเลียงจริงต้องเผชิญกับเงาตกกระทบและความผันผวนของแสง ระบบสี \textbf{RGB (Red, Green, Blue)} จะรวมระดับความสว่าง (Intensity) ไว้ในทุกช่องสัญญาณ ทำให้เมื่อผลไม้โดนเงา ค่าพิกเซลจะดรอปลงใกล้ศูนย์ คอมพิวเตอร์จึงสับสนคิดว่าเป็นจุดช้ำหรือสีดำ
+
+การแปลงภาพไปสู่สเปซสี \textbf{HSV (Hue, Saturation, Value)\index{สเปซสีเอชเอสวี (HSV)}\index{HSV Color Space}} จะช่วยแยกข้อมูล \textbf{เฉดสีบริสุทธิ์ (Hue: H)} ออกจากระดับความเข้มของแสงสว่าง (Value: V) ทำให้ระบบตรวจจับสีสุกแก่ของร่องพูได้อย่างคงที่แม้จะมีเงาบดบัง
+
+\begin{equation}
+H = \begin{cases}
+0^\circ & \text{เมื่อ } \Delta = 0 \\
+60^\circ \times \left( \frac{G - B}{\Delta} \bmod 6 \right) & \text{เมื่อ } C_{\max} = R \\
+60^\circ \times \left( \frac{B - R}{\Delta} + 2 \right) & \text{เมื่อ } C_{\max} = G \\
+60^\circ \times \left( \frac{R - G}{\Delta} + 4 \right) & \text{เมื่อ } C_{\max} = B
+\end{cases}
+\label{eq:rgb_to_hsv}
+\end{equation}
+
+โดยที่ $C_{\max} = \max(R, G, B)$, $C_{\min} = \min(R, G, B)$, และ $\Delta = C_{\max} - C_{\min}$
+
+\begin{pythonbox}[การตัดแยกสีร่องพูทุเรียนด้วย OpenCV ภาษา Python]
+import cv2
+import numpy as np
+
+def analyze_durian_groove_maturity(image_path: str):
+    image = cv2.imread(image_path)
+    hsv = cv2.cvtColor(image, cv2.COLOR_BGR2HSV)
+    
+    # กำหนดช่วงสีน้ำตาลอมเหลืองของร่องพูทุเรียนแก่ในระบบ OpenCV HSV
+    # H: 15-35, S: 50-220, V: 50-255
+    lower_mature_groove = np.array([15, 50, 50])
+    upper_mature_groove = np.array([35, 220, 255])
+    
+    # สร้าง Mask และกำจัดสัญญาณรบกวนด้วย Morphological Opening
+    mask = cv2.inRange(hsv, lower_mature_groove, upper_mature_groove)
+    kernel = cv2.getStructuringElement(cv2.MORPH_RECT, (3, 3))
+    cleaned_mask = cv2.morphologyEx(mask, cv2.MORPH_OPEN, kernel)
+    
+    # คำนวณอัตราส่วนพื้นที่ร่องหนามแก่เทียบกับพื้นที่ผลทั้งหมด
+    total_fruit_pixels = np.count_nonzero(hsv[:, :, 2] > 20)
+    mature_groove_pixels = np.count_nonzero(cleaned_mask)
+    groove_ratio = mature_groove_pixels / max(total_fruit_pixels, 1)
+    
+    return {
+        "groove_ratio": groove_ratio,
+        "is_visually_mature": groove_ratio > 0.18
+    }
+\end{pythonbox}
+
+\section{ฟิสิกส์การสั่นพ้องทางสวนศาสตร์เคาะผลทุเรียน}
+
+ภูมิปัญญาชาวสวนทุเรียนดั้งเดิมใช้ไม้เคาะผลทุเรียนเพื่อฟังเสียง \textbf{การสั่นพ้องทางสวนศาสตร์ (Acoustic Resonance)\index{การสั่นพ้องทางสวนศาสตร์ (Acoustic Resonance)}\index{Acoustic Resonance}} เมื่อทุเรียนสุกแก่ เนื้อภายในจะเกิดการคลายตัวและแยกตัวออกจากเปลือกด้านใน เกิดเป็นโพรงอากาศขนาดเล็ก (Air Cavity) 
+
+ในเชิงฟิสิกส์การสั่นสะเทือน ผลทุเรียนเปรียบเสมือนระบบก้อนมวลและสปริงหลายมิติ (Multidimensional Mass-Spring System)
+\begin{itemize}[leftmargin=1.5em]
+    \item \textbf{ทุเรียนอ่อน:} เนื้อทุเรียนยังแน่นติดสนิทกับเปลือก ความแข็งตึง (Stiffness: $k$) มีค่าสูง มวลที่เคลื่อนที่ร่วมมีมาก ความถี่เรโซแนนซ์ธรรมชาติจะอยู่ในย่านความถี่สูง \textbf{450 ถึง 650 Hz} ทำให้ได้ยินเสียงแหลมทึบ
+    \item \textbf{ทุเรียนแก่พร้อมตัด:} เนื้อทุเรียนนุ่มลงและเกิดโพรงอากาศรอบพู ความแข็งตึงสัมผัสลดลงอย่างมีนัยสำคัญ ส่งผลให้ความถี่เรโซแนนซ์ธรรมชาติลดลงมาอยู่ในย่านความถี่ต่ำ \textbf{180 ถึง 320 Hz} ทำให้ได้ยินเสียงโปร่งกลวงชัดเจน
+\end{itemize}
+
+\subsection{การวิเคราะห์สเปกตรัมความถี่ด้วยการแปลงฟูเรียร์อย่างเร็ว}
+
+สัญญาณเสียงที่บันทึกได้จากการเคาะจะถูกนำมาแปลงจากโดเมนเวลา (Time Domain) ไปสู่โดเมนความถี่ (Frequency Domain) ด้วยอัลกอริทึม \textbf{การแปลงฟูเรียร์อย่างเร็ว (Fast Fourier Transform หรือ FFT\index{การแปลงฟูเรียร์อย่างเร็ว (FFT)}\index{Fast Fourier Transform (FFT)})}
+
+\begin{equation}
+X(k) = \sum_{n=0}^{N-1} x(n) \exp\left( -j \frac{2\pi k n}{N} \right)
+\label{eq:fft}
+\end{equation}
+
+ตำแหน่งของยอดคลื่นหลัก (Dominant Peak Frequency: $f_{\text{dom}}$) สัมพันธ์เชิงเส้นกับเปอร์เซ็นต์เนื้อแห้ง (\%DM) ดังแบบจำลองการถดถอยที่ได้จากการทดลองจริงของคณะวิจัย
+
+\begin{equation}
+\% \text{DM} = 48.5 - 0.052 \times f_{\text{dom}} \quad (R^2 = 0.94)
+\label{eq:acoustic_dm}
+\end{equation}
+
+\begin{pythonbox}[การวิเคราะห์ความถี่เสียงเคาะทุเรียนด้วย FFT ภาษา Python]
+import numpy as np
+from scipy.fft import rfft, rfftfreq
+
+def analyze_acoustic_resonance(audio_samples: np.ndarray, sample_rate: int = 44100):
+    # ปรับสัญญาณให้มีค่าเฉลี่ยเป็นศูนย์และใส่หน้าต่างแฮนนิง (Hanning Window)
+    centered = audio_samples - np.mean(audio_samples)
+    windowed = centered * np.hanning(len(centered))
+    
+    # คำนวณ FFT สเปกตรัมความถี่
+    N = len(windowed)
+    yf = np.abs(rfft(windowed))
+    xf = rfftfreq(N, 1.0 / sample_rate)
+    
+    # คัดกรองเฉพาะย่านความถี่การสั่นพ้องของทุเรียน (100 - 1000 Hz)
+    valid_idx = np.where((xf >= 100) & (xf <= 1000))
+    dominant_freq = xf[valid_idx][np.argmax(yf[valid_idx])]
+    
+    # ประมาณการเปอร์เซ็นต์เนื้อแห้ง
+    estimated_dm = 48.5 - (0.052 * dominant_freq)
+    
+    return {
+        "dominant_freq_hz": dominant_freq,
+        "estimated_dm_pct": estimated_dm,
+        "is_mature": estimated_dm >= 32.0
+    }
+\end{pythonbox}
+
+\section*{คำถามทบทวนท้ายบทที่ 4}
+\addcontentsline{toc}{section}{คำถามทบทวนท้ายบทที่ 4}
+
+\begin{enumerate}
+    \item จงระบุเปอร์เซ็นต์น้ำหนักเนื้อแห้งขั้นต่ำตามมาตรฐาน มกษ. 3-2556 ของทุเรียนพันธุ์หมอนทองและชะนี พร้อมอธิบายผลเสียทางเศรษฐกิจหากเก็บเกี่ยวทุเรียนไม่ได้มาตรฐาน
+    \item เหตุใดการวิเคราะห์สีร่องพูทุเรียนบนสายพานลำเลียงจึงต้องแปลงระบบสีจาก RGB เป็น HSV
+    \item อธิบายหลักการทางฟิสิกส์การสั่นสะเทือนที่ทำให้ความถี่เรโซแนนซ์จากการเคาะผลทุเรียนแก่ต่ำกว่าผลทุเรียนอ่อน
+    \item หากวัดความถี่เรโซแนนซ์หลักของทุเรียนหมอนทองได้ 240 Hz จงประเมินเปอร์เซ็นต์เนื้อแห้งตามแบบจำลองทางสถิติ พร้อมระบุว่าทุเรียนผลนี้ผ่านเกณฑ์ส่งออกหรือไม่
+\end{enumerate}
+\clearpage

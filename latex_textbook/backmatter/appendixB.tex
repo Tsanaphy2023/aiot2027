@@ -1,0 +1,46 @@
+\renewcommand{\thechapter}{ข}
+\chapter{โค้ดต้นแบบ MicroPython และไลบรารี Modbus CRC-16}
+\label{chap:appendixB}
+
+\section{ไลบรารี Modbus RTU สำหรับชิป ESP32-S3}
+
+ซอร์สโค้ดภาษา MicroPython สำหรับการสื่อสารกับโพรบวัดดิน 7-in-1 และอินเวอร์เตอร์ขับมอเตอร์ VFD ผ่านพอร์ตซีเรียล UART2
+
+\begin{pythonbox}[โมดูล modbus\_crc16.py สำหรับ MicroPython]
+import struct
+from machine import UART, Pin
+
+class ModbusRTUMaster:
+    def __init__(self, uart_id: int = 2, tx_pin: int = 17, rx_pin: int = 16, 
+                 baudrate: int = 9600, de_re_pin: int = 4):
+        self.uart = UART(uart_id, baudrate=baudrate, tx=Pin(tx_pin), rx=Pin(rx_pin))
+        self.de_re = Pin(de_re_pin, Pin.OUT)
+        self.de_re.value(0) # ตั้งค่ารับเริ่มต้น (Receive Mode)
+
+    @staticmethod
+    def calculate_crc(data: bytes) -> int:
+        crc = 0xFFFF
+        for byte in data:
+            crc ^= byte
+            for _ in range(8):
+                if crc & 0x0001:
+                    crc = (crc >> 1) ^ 0xA001
+                else:
+                    crc >>= 1
+        return crc
+
+    def send_command(self, slave_id: int, func_code: int, start_reg: int, count: int) -> bytes:
+        raw_cmd = struct.pack(">BBHH", slave_id, func_code, start_reg, count)
+        crc = self.calculate_crc(raw_cmd)
+        full_packet = raw_cmd + struct.pack("<H", crc)
+        
+        # สลับเป็นโหมดส่ง (Transmit Mode)
+        self.de_re.value(1)
+        self.uart.write(full_packet)
+        # รอให้ส่งข้อมูลเสร็จสิ้นแล้วสลับกลับเป็นโหมดรับ
+        self.de_re.value(0)
+        
+        # อ่านข้อมูลตอบกลับภายใน 1 วินาที
+        return self.uart.read(256)
+\end{pythonbox}
+\clearpage

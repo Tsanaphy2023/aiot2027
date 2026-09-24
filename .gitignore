@@ -1,0 +1,43 @@
+# Operating System
+.DS_Store
+Thumbs.db
+
+# Large Video & Media Files (> 50MB)
+*.mp4
+*.mov
+*.avi
+*.mkv
+*.zip
+*.tar.gz
+
+# Python & Environment
+__pycache__/
+*.pyc
+*.pyo
+.venv/
+env/
+
+# LaTeX build artifacts
+*.aux
+*.log
+*.toc
+*.lof
+*.lot
+*.out
+*.idx
+*.ilg
+*.ind
+*.listing
+*.synctex.gz
+*.fls
+*.fdb_latexmk
+
+# Database temporary files
+*.db-journal
+*.db-wal
+*.db-shm
+
+# IDE
+.idea/
+.vscode/
+scirbru_aiot207

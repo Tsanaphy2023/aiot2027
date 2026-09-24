@@ -1,0 +1,95 @@
+\documentclass[12pt,a4paper,oneside]{book}
+
+% 1. Master Style for SCIRBRU Eastern Agri-Aqua AIoT (RBRU Masterclass Standard)
+\usepackage{styles/scirbru_aiot_style}
+
+% 2. Font configuration for XeLaTeX (Thai Unicode Sarabun)
+\usepackage{fontspec}
+\setmainfont{Sarabun}
+\setsansfont{Sarabun}
+\setmonofont{Sarabun}[Scale=0.9]
+
+% 3. Hyperref Setup
+\usepackage{hyperref}
+\hypersetup{
+    colorlinks=true,
+    linkcolor=rbruNavy,
+    citecolor=agriForest,
+    urlcolor=aquaCyan,
+    filecolor=durianGold,
+    pdftitle={หลักสูตรเกษตรดิจิทัลและปัญญาประดิษฐ์ฝังตัว - มหาวิทยาลัยราชภัฏรำไพพรรณี},
+    pdfauthor={ผู้ช่วยศาสตราจารย์ ดร.ชีวะ ทัศนา และคณะ}
+}
+
+\begin{document}
+
+% ==========================================
+% ส่วนนำ (Frontmatter)
+% ==========================================
+\frontmatter
+\input{frontmatter/cover}
+\input{frontmatter/title}
+\input{frontmatter/preface}
+\input{frontmatter/acknowledgements}
+\input{frontmatter/syllabus}
+
+% สารบัญหลัก สารบัญภาพ และสารบัญตาราง
+\clearpage
+\phantomsection
+\addcontentsline{toc}{chapter}{\contentsname}
+\tableofcontents
+
+\clearpage
+\phantomsection
+\addcontentsline{toc}{chapter}{\listfigurename}
+\listoffigures
+
+\clearpage
+\phantomsection
+\addcontentsline{toc}{chapter}{\listtablename}
+\listoftables
+
+% ==========================================
+% ส่วนเนื้อหา (Mainmatter)
+% ==========================================
+\mainmatter
+
+% ตอนที่ 1: รากฐานฟิสิกส์เกษตรและสมองกลฝังตัว
+\input{chapters/ch01_intro_agriphysics}
+\input{chapters/ch02_embedded_highpower_control}
+
+% ตอนที่ 2: กิจกรรมที่ 1 นวัตกร AIoT สวนผลไม้มูลค่าสูง
+\input{chapters/ch03_orchard_hydraulics_etc}
+\input{chapters/ch04_durian_maturity_vision_acoustics}
+\input{chapters/ch05_yolo_fruit_grading_conveyor}
+
+% ตอนที่ 3: กิจกรรมที่ 2 นวัตกร AIoT ฟาร์มสัตว์น้ำชายฝั่ง
+\input{chapters/ch06_aquaculture_thermodynamics_do_vfd}
+\input{chapters/ch07_shrimp_feeding_tray_vision}
+\input{chapters/ch08_shrimp_pathology_water_bloom}
+
+% ตอนที่ 4: โครงข่ายระยะไกลและโครงงานบูรณาการ
+\input{chapters/ch09_lorawan_marine_solar_cloud}
+\input{chapters/ch10_capstone_integrated_pipeline}
+
+% ==========================================
+% ภาคผนวก (Appendix - ก่อน backmatter เพื่อรักษาระบบเลข ก, ข)
+% ==========================================
+\appendix
+\input{backmatter/appendixA}
+\input{backmatter/appendixB}
+
+% ==========================================
+% ส่วนท้าย (Backmatter)
+% ==========================================
+\backmatter
+\input{backmatter/references}
+
+\clearpage
+\phantomsection
+\addcontentsline{toc}{chapter}{\indexname}
+\printindex
+
+\input{backmatter/biography}
+
+\end{document}

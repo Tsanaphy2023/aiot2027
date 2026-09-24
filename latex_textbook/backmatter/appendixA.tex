@@ -1,0 +1,58 @@
+\renewcommand{\thechapter}{ก}
+\chapter{สูตรคณิตศาสตร์และตารางค่าคงที่ฟิสิกส์เกษตร}
+\label{chap:appendixA}
+
+\section{สรุปสมการหลักการแรกในฟิสิกส์เกษตรดิจิทัล}
+
+\subsection{สมการไฟฟ้าเคมีและอุณหพลศาสตร์ของดิน}
+\begin{enumerate}
+    \item \textbf{สมการเนิร์นสต์ (Nernst Equation)} สำหรับการวัดค่าความเป็นกรด-ด่าง
+    \begin{equation}
+    E = E^0 - \frac{2.303 R T}{F} \text{pH}
+    \end{equation}
+    \item \textbf{สมการความดันไอน้ำอิ่มตัวของเทเทนส์ (Tetens Equation)}
+    \begin{equation}
+    e_s(T) = 0.61078 \exp\left( \frac{17.27 T}{T + 237.3} \right) \quad (\text{kPa})
+    \end{equation}
+    \item \textbf{สมการแรงดึงระเหยน้ำของอากาศ (VPD)}
+    \begin{equation}
+    \text{VPD} = e_s(T) \times \left( 1 - \frac{\text{RH}}{100} \right) \quad (\text{kPa})
+    \end{equation}
+\end{enumerate}
+
+\subsection{สมการชลศาสตร์ท่อและการคายระเหยน้ำของพืช}
+\begin{enumerate}
+    \item \textbf{การคายระเหยน้ำของพืช ($ET_c$)}
+    \begin{equation}
+    ET_c = ET_0 \times K_c \quad (\text{mm/day})
+    \end{equation}
+    \item \textbf{ปริมาตรน้ำที่ต้องการต่อต้น ($V_{\text{water}}$)}
+    \begin{equation}
+    V_{\text{water}} = \frac{A_{\text{canopy}} \times ET_c}{\text{Eff}} \quad (\text{Liters/tree/day})
+    \end{equation}
+    \item \textbf{สมการการสูญเสียแรงดันในท่อของเฮเซน-วิลเลียมส์ (Hazen-Williams)}
+    \begin{equation}
+    h_f = 10.67 \times \frac{L \times Q^{1.852}}{C^{1.852} \times D^{4.87}} \quad (\text{meters})
+    \end{equation}
+    \item \textbf{เฮดรวมของระบบชลศาสตร์ ($TDH$)}
+    \begin{equation}
+    TDH = H_s + h_f + h_m + H_{op} \quad (\text{meters})
+    \end{equation}
+\end{enumerate}
+
+\subsection{สมการอุณหพลศาสตร์การละลายของก๊าซและเครื่องกลหมุน}
+\begin{enumerate}
+    \item \textbf{สมการการดับการเรืองแสงสเติร์น-โวลเมอร์ (Stern-Volmer)}
+    \begin{equation}
+    \frac{\tau_0}{\tau} = 1 + K_{SV} [\text{O}_2]
+    \end{equation}
+    \item \textbf{การถ่ายเทมวลสารของออกซิเจนละลายน้ำ}
+    \begin{equation}
+    \frac{dC}{dt} = K_L a \left( C^*_s - C \right)
+    \end{equation}
+    \item \textbf{กฎความคล้ายคลึงของเครื่องกลหมุนสำหรับการประหยัดพลังงาน (Affinity Laws)}
+    \begin{equation}
+    \frac{P_2}{P_1} = \left( \frac{N_2}{N_1} \right)^3
+    \end{equation}
+\end{enumerate}
+\clearpage

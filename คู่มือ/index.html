@@ -1,0 +1,719 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>คู่มือการติดตั้งและใช้งานเครื่องเสมือน Farm Workshop (Home Assistant) | Smart Farm IoT</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Sarabun:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --primary: #0284c7;
+      --primary-dark: #0369a1;
+      --primary-light: #e0f2fe;
+      --success: #16a34a;
+      --success-light: #dcfce7;
+      --warning: #d97706;
+      --warning-light: #fef3c7;
+      --danger: #dc2626;
+      --danger-light: #fee2e2;
+      --text-main: #1e293b;
+      --text-muted: #64748b;
+      --bg-page: #f8fafc;
+      --bg-card: #ffffff;
+      --border: #e2e8f0;
+      --shadow-sm: 0 1px 2px 0 rgb(0 0 0 / 0.05);
+      --shadow: 0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -2px rgb(0 0 0 / 0.1);
+      --shadow-lg: 0 10px 15px -3px rgb(0 0 0 / 0.1), 0 4px 6px -4px rgb(0 0 0 / 0.1);
+      --radius: 12px;
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      font-family: 'Sarabun', -apple-system, BlinkMacSystemFont, sans-serif;
+      background-color: var(--bg-page);
+      color: var(--text-main);
+      line-height: 1.7;
+      font-size: 16px;
+      -webkit-font-smoothing: antialiased;
+    }
+
+    .container {
+      max-width: 900px;
+      margin: 0 auto;
+      padding: 40px 20px 80px 20px;
+    }
+
+    header {
+      background: linear-gradient(135deg, #0369a1 0%, #0284c7 50%, #0ea5e9 100%);
+      color: white;
+      padding: 48px 32px;
+      border-radius: var(--radius);
+      box-shadow: var(--shadow-lg);
+      margin-bottom: 32px;
+      position: relative;
+      overflow: hidden;
+    }
+
+    header::after {
+      content: '🌱';
+      position: absolute;
+      right: 20px;
+      bottom: -15px;
+      font-size: 140px;
+      opacity: 0.15;
+      pointer-events: none;
+    }
+
+    .badge-header {
+      display: inline-block;
+      background: rgba(255, 255, 255, 0.2);
+      backdrop-filter: blur(8px);
+      padding: 4px 14px;
+      border-radius: 9999px;
+      font-size: 14px;
+      font-weight: 500;
+      margin-bottom: 16px;
+      letter-spacing: 0.5px;
+    }
+
+    h1 {
+      font-size: 28px;
+      font-weight: 700;
+      line-height: 1.3;
+      margin-bottom: 12px;
+    }
+
+    .subtitle {
+      font-size: 16px;
+      opacity: 0.95;
+      max-width: 700px;
+    }
+
+    .card {
+      background: var(--bg-card);
+      border-radius: var(--radius);
+      border: 1px solid var(--border);
+      padding: 28px;
+      margin-bottom: 24px;
+      box-shadow: var(--shadow-sm);
+      transition: transform 0.2s ease, box-shadow 0.2s ease;
+    }
+
+    .card:hover {
+      box-shadow: var(--shadow);
+    }
+
+    .section-title {
+      font-size: 22px;
+      font-weight: 700;
+      color: #0f172a;
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      margin-bottom: 20px;
+      padding-bottom: 12px;
+      border-bottom: 2px solid #f1f5f9;
+    }
+
+    .step-badge {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      width: 32px;
+      height: 32px;
+      background: var(--primary);
+      color: white;
+      border-radius: 8px;
+      font-size: 16px;
+      font-weight: 700;
+    }
+
+    /* Callouts */
+    .callout {
+      padding: 16px 20px;
+      border-radius: 10px;
+      margin: 16px 0;
+      font-size: 15px;
+      display: flex;
+      gap: 14px;
+      align-items: flex-start;
+    }
+
+    .callout-icon {
+      font-size: 20px;
+      line-height: 1.4;
+      flex-shrink: 0;
+    }
+
+    .callout.important {
+      background-color: var(--primary-light);
+      border-left: 4px solid var(--primary);
+      color: #0369a1;
+    }
+
+    .callout.warning {
+      background-color: var(--warning-light);
+      border-left: 4px solid var(--warning);
+      color: #92400e;
+    }
+
+    .callout.danger {
+      background-color: var(--danger-light);
+      border-left: 4px solid var(--danger);
+      color: #991b1b;
+    }
+
+    .callout.success {
+      background-color: var(--success-light);
+      border-left: 4px solid var(--success);
+      color: #166534;
+    }
+
+    /* Tabs */
+    .tabs {
+      display: flex;
+      gap: 8px;
+      margin-bottom: 16px;
+      border-bottom: 1px solid var(--border);
+      padding-bottom: 8px;
+    }
+
+    .tab-btn {
+      background: transparent;
+      border: none;
+      padding: 8px 16px;
+      font-family: inherit;
+      font-size: 15px;
+      font-weight: 600;
+      color: var(--text-muted);
+      cursor: pointer;
+      border-radius: 8px;
+      transition: all 0.2s;
+    }
+
+    .tab-btn.active {
+      background: var(--primary-light);
+      color: var(--primary-dark);
+    }
+
+    .tab-content {
+      display: none;
+    }
+
+    .tab-content.active {
+      display: block;
+    }
+
+    /* Download Box */
+    .dl-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+      gap: 16px;
+      margin: 16px 0;
+    }
+
+    .dl-card {
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      padding: 20px;
+      background: #fafafa;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+    }
+
+    .dl-title {
+      font-weight: 700;
+      font-size: 16px;
+      margin-bottom: 6px;
+      color: #1e293b;
+    }
+
+    .dl-desc {
+      font-size: 13px;
+      color: var(--text-muted);
+      margin-bottom: 16px;
+    }
+
+    .btn {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      background: var(--primary);
+      color: white;
+      text-decoration: none;
+      padding: 10px 18px;
+      border-radius: 8px;
+      font-weight: 600;
+      font-size: 14px;
+      transition: background 0.2s;
+    }
+
+    .btn:hover {
+      background: var(--primary-dark);
+    }
+
+    .btn-secondary {
+      background: #f1f5f9;
+      color: #334155;
+    }
+
+    .btn-secondary:hover {
+      background: #e2e8f0;
+    }
+
+    /* Code Terminal Display */
+    .terminal-box {
+      background: #0f172a;
+      color: #f8fafc;
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 13.5px;
+      border-radius: 10px;
+      padding: 18px 22px;
+      margin: 16px 0;
+      overflow-x: auto;
+      position: relative;
+      border: 1px solid #334155;
+    }
+
+    .terminal-header {
+      display: flex;
+      gap: 6px;
+      margin-bottom: 12px;
+    }
+
+    .dot {
+      width: 10px;
+      height: 10px;
+      border-radius: 50%;
+    }
+    .dot-red { background: #ef4444; }
+    .dot-yellow { background: #f59e0b; }
+    .dot-green { background: #10b981; }
+
+    .highlight-ip {
+      color: #38bdf8;
+      font-weight: bold;
+    }
+
+    /* Checklist */
+    .checklist {
+      list-style: none;
+    }
+
+    .checklist-item {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      padding: 10px 0;
+      border-bottom: 1px solid #f1f5f9;
+    }
+
+    .check-icon {
+      color: var(--success);
+      font-size: 18px;
+      font-weight: bold;
+    }
+
+    /* Flow Steps */
+    .timeline {
+      position: relative;
+      padding-left: 36px;
+      margin: 20px 0;
+    }
+
+    .timeline::before {
+      content: '';
+      position: absolute;
+      left: 14px;
+      top: 10px;
+      bottom: 10px;
+      width: 2px;
+      background: #e2e8f0;
+    }
+
+    .timeline-step {
+      position: relative;
+      margin-bottom: 24px;
+    }
+
+    .timeline-dot {
+      position: absolute;
+      left: -36px;
+      top: 2px;
+      width: 28px;
+      height: 28px;
+      border-radius: 50%;
+      background: var(--primary);
+      color: white;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: 700;
+      font-size: 13px;
+      border: 3px solid #fff;
+      box-shadow: 0 0 0 2px var(--primary-light);
+    }
+
+    .timeline-title {
+      font-size: 16px;
+      font-weight: 700;
+      margin-bottom: 4px;
+    }
+
+    footer {
+      text-align: center;
+      margin-top: 48px;
+      font-size: 14px;
+      color: var(--text-muted);
+    }
+
+    @media print {
+      body { background: white; }
+      .container { max-width: 100%; padding: 0; }
+      .card { box-shadow: none; border: 1px solid #ccc; page-break-inside: avoid; }
+      header { background: #0284c7; color: white; -webkit-print-color-adjust: exact; }
+    }
+  </style>
+</head>
+<body>
+
+  <div class="container">
+
+    <!-- Header -->
+    <header>
+      <div class="badge-header">🌱 SMART FARM IoT WORKSHOP</div>
+      <h1>คู่มือการติดตั้งและใช้งานเครื่องเสมือน Farm Workshop</h1>
+      <p class="subtitle">ระบบ Home Assistant สำหรับควบคุมฟาร์มอัจฉริยะ (ฉบับผู้เริ่มต้น เตรียมพร้อมทีละขั้นตอนก่อนวันอบรม)</p>
+    </header>
+
+    <!-- Important Notice -->
+    <div class="callout important">
+      <div class="callout-icon">💡</div>
+      <div>
+        <strong>ข้อปฏิบัติก่อนวันอบรม:</strong> ต้องดาวน์โหลดและติดตั้งให้เสร็จสมบูรณ์จากที่บ้านก่อนเดินทางมาอบรม (ใช้เวลาราว 20–30 นาที) ไฟล์มีขนาด <strong>~2.6 GB</strong> ห้ามรอมาดาวน์โหลดในห้องอบรม เพราะความจุเครือข่ายจะไม่เพียงพอ
+      </div>
+    </div>
+
+    <!-- Requirements Card -->
+    <div class="card">
+      <div class="section-title">
+        <span class="step-badge">1</span>
+        ตรวจสอบความพร้อมของคอมพิวเตอร์
+      </div>
+      <p style="margin-bottom: 16px; color: var(--text-muted);">ตรวจสอบคุณสมบัติเครื่องแล็ปท็อปของท่านให้ตรงตามเกณฑ์ขั้นต่ำต่อไปนี้:</p>
+      
+      <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 14px;">
+        <div style="padding: 14px; background: #f8fafc; border-radius: 8px; border: 1px solid var(--border);">
+          <div style="font-size: 13px; color: var(--text-muted);">หน่วยความจำ (RAM)</div>
+          <div style="font-size: 18px; font-weight: 700; color: #0284c7;">8 GB ขึ้นไป</div>
+        </div>
+        <div style="padding: 14px; background: #f8fafc; border-radius: 8px; border: 1px solid var(--border);">
+          <div style="font-size: 13px; color: var(--text-muted);">พื้นที่ว่างบนดิสก์</div>
+          <div style="font-size: 18px; font-weight: 700; color: #0284c7;">20 GB ขึ้นไป</div>
+        </div>
+        <div style="padding: 14px; background: #f8fafc; border-radius: 8px; border: 1px solid var(--border);">
+          <div style="font-size: 13px; color: var(--text-muted);">ระบบปฏิบัติการ</div>
+          <div style="font-size: 16px; font-weight: 700; color: #1e293b;">Windows 10/11 หรือ Mac</div>
+        </div>
+      </div>
+
+      <div class="callout danger" style="margin-top: 16px;">
+        <div class="callout-icon">⛔</div>
+        <div><strong>อุปกรณ์ที่ไม่รองรับ:</strong> Chromebook, iPad / แท็บเล็ตทุกชนิด และ Windows ที่ใช้ชิป ARM ไม่สามารถติดตั้งและใช้งานระบบนี้ได้</div>
+      </div>
+    </div>
+
+    <!-- Download Section with Tabs -->
+    <div class="card">
+      <div class="section-title">
+        <span class="step-badge">2</span>
+        ดาวน์โหลดโปรแกรมและไฟล์ตามระบบปฏิบัติการ
+      </div>
+
+      <div class="tabs">
+        <button class="tab-btn active" onclick="switchTab(event, 'tab-apple')">🍏 Mac (ชิป Apple Silicon M1-M4)</button>
+        <button class="tab-btn" onclick="switchTab(event, 'tab-win')">🪟 Windows (Intel/AMD)</button>
+        <button class="tab-btn" onclick="switchTab(event, 'tab-intel-mac')">🍎 Mac (ชิป Intel)</button>
+      </div>
+
+      <!-- Tab: Mac Apple Silicon -->
+      <div id="tab-apple" class="tab-content active">
+        <p style="font-size: 14px; color: var(--text-muted); margin-bottom: 12px;">
+          สำหรับ Mac ชิป M1, M2, M3 หรือ M4 (ตรวจสอบที่เมนู  → About This Mac ดูบรรทัด Chip)
+        </p>
+        <div class="dl-grid">
+          <div class="dl-card">
+            <div>
+              <div class="dl-title">VirtualBox 7.2+ (ARM64)</div>
+              <div class="dl-desc">โปรแกรมจำลองเครื่องเสมือนสำหรับ Mac Apple Silicon</div>
+            </div>
+            <a class="btn" href="https://www.virtualbox.org/wiki/Downloads" target="_blank">📥 ดาวน์โหลด VirtualBox</a>
+          </div>
+          <div class="dl-card">
+            <div>
+              <div class="dl-title">Farm-Workshop-arm64-1.2.ova</div>
+              <div class="dl-desc">ไฟล์เครื่องเสมือน Home Assistant ขนาด ~1.89 GB</div>
+            </div>
+            <a class="btn" href="https://drive.google.com/drive/folders/1XiTigV52XVenZ8DhMZ6351dHOZvRHgMD" target="_blank">📁 เปิด Google Drive</a>
+          </div>
+        </div>
+        <div style="font-size: 12px; color: var(--text-muted); background: #f1f5f9; padding: 8px 12px; border-radius: 6px; font-family: monospace;">
+          SHA256: 86a23d9e6c7b52928699ad25426c4e753aad8a0e739d5e77f2fe3f4c371450d0
+        </div>
+      </div>
+
+      <!-- Tab: Windows -->
+      <div id="tab-win" class="tab-content">
+        <p style="font-size: 14px; color: var(--text-muted); margin-bottom: 12px;">
+          สำหรับคอมพิวเตอร์ Windows 10/11 สถาปัตยกรรม 64-bit (Intel หรือ AMD)
+        </p>
+        <div class="dl-grid">
+          <div class="dl-card">
+            <div>
+              <div class="dl-title">VirtualBox for Windows</div>
+              <div class="dl-desc">โปรแกรมจำลองเครื่องเสมือนสำหรับ Windows Hosts</div>
+            </div>
+            <a class="btn" href="https://www.virtualbox.org/wiki/Downloads" target="_blank">📥 ดาวน์โหลด VirtualBox</a>
+          </div>
+          <div class="dl-card">
+            <div>
+              <div class="dl-title">Farm-Workshop-win-1.2.ova</div>
+              <div class="dl-desc">ไฟล์เครื่องเสมือน Home Assistant ขนาด ~2.6 GB</div>
+            </div>
+            <a class="btn" href="https://drive.google.com/file/d/1DrX4O-jywvnCA0b4aqdQ3z9r7F2EkEf8/view?usp=sharing" target="_blank">📁 ดาวน์โหลดไฟล์ OVA</a>
+          </div>
+        </div>
+        <div class="callout warning" style="margin-top: 10px;">
+          <div class="callout-icon">ℹ️</div>
+          <div>หากติดตั้งเสร็จแล้วเปิด VirtualBox ไม่ขึ้น ให้ติดตั้ง <a href="https://aka.ms/vs/17/release/vc_redist.x64.exe" target="_blank" style="color: #92400e; font-weight: bold;">Microsoft Visual C++ Redistributable (x64)</a> เพิ่มเติม</div>
+        </div>
+      </div>
+
+      <!-- Tab: Mac Intel -->
+      <div id="tab-intel-mac" class="tab-content">
+        <p style="font-size: 14px; color: var(--text-muted); margin-bottom: 12px;">
+          สำหรับ Mac รุ่นเดิมที่ใช้ชิปประมวลผล Intel Core i5 / i7 / i9
+        </p>
+        <div class="dl-grid">
+          <div class="dl-card">
+            <div>
+              <div class="dl-title">VirtualBox for macOS / Intel</div>
+              <div class="dl-desc">โปรแกรม VirtualBox สำหรับชิป Intel x86_64</div>
+            </div>
+            <a class="btn" href="https://www.virtualbox.org/wiki/Downloads" target="_blank">📥 ดาวน์โหลด VirtualBox</a>
+          </div>
+          <div class="dl-card">
+            <div>
+              <div class="dl-title">Farm-Workshop-win-1.2.ova</div>
+              <div class="dl-desc">ไฟล์เครื่องเสมือนรุ่นมาตรฐาน (ใช้ไฟล์เดียวกับ Windows)</div>
+            </div>
+            <a class="btn" href="https://drive.google.com/file/d/1DrX4O-jywvnCA0b4aqdQ3z9r7F2EkEf8/view?usp=sharing" target="_blank">📁 ดาวน์โหลดไฟล์ OVA</a>
+          </div>
+        </div>
+      </div>
+
+    </div>
+
+    <!-- Step by Step Setup -->
+    <div class="card">
+      <div class="section-title">
+        <span class="step-badge">3</span>
+        ขั้นตอนการติดตั้งและนำเข้า Appliance
+      </div>
+
+      <div class="timeline">
+        <div class="timeline-step">
+          <div class="timeline-dot">1</div>
+          <div class="timeline-title">ติดตั้ง VirtualBox</div>
+          <p style="font-size: 14px; color: var(--text-muted);">
+            เปิดไฟล์ตัวติดตั้งที่ดาวน์โหลดมา กด Next หรือ Yes ตามขั้นตอนมาตรฐานจนเสร็จสมบูรณ์
+          </p>
+        </div>
+
+        <div class="timeline-step">
+          <div class="timeline-dot">2</div>
+          <div class="timeline-title">นำเข้าไฟล์ Appliance (.ova)</div>
+          <p style="font-size: 14px; color: var(--text-muted);">
+            เปิด VirtualBox → ไปที่เมนู <strong>File</strong> → เลือก <strong>Import Appliance...</strong>
+          </p>
+        </div>
+
+        <div class="timeline-step">
+          <div class="timeline-dot">3</div>
+          <div class="timeline-title">เลือกไฟล์และยืนยัน</div>
+          <p style="font-size: 14px; color: var(--text-muted);">
+            คลิกปุ่มเบราว์เซอร์เลือกไฟล์ <code>.ova</code> ที่ดาวน์โหลดไว้ → กด <strong>Next</strong> → ค่าต่าง ๆ ถูกตั้งค่ามาพร้อมใช้แล้ว กด <strong>Finish</strong> (หรือ Import) แล้วรอแถบทำงานจนเสร็จ 100%
+          </p>
+        </div>
+      </div>
+    </div>
+
+    <!-- Start & Verify -->
+    <div class="card">
+      <div class="section-title">
+        <span class="step-badge">4</span>
+        การเปิดเครื่องและตรวจสอบความพร้อม (First Boot)
+      </div>
+
+      <div class="callout warning">
+        <div class="callout-icon">⚠️</div>
+        <div>
+          <strong>ข้อควรระวังสำคัญที่สุด:</strong> ต้องเชื่อมต่อแล็ปท็อปเข้ากับเครือข่าย Wi-Fi ให้เรียบร้อย <u>ก่อน</u> ที่จะกดเปิดเครื่องเสมือนทุกครั้ง เพื่อให้เครื่องเสมือนได้รับหมายเลข IP
+        </div>
+      </div>
+
+      <ol style="margin-left: 20px; margin-bottom: 16px; font-size: 15px; color: #334155;">
+        <li style="margin-bottom: 8px;">คลิกเลือกเครื่อง <strong>Farm Workshop</strong> ในหน้าต่าง VirtualBox</li>
+        <li style="margin-bottom: 8px;">กดปุ่ม <strong>Start</strong> (ลูกศรสีเขียว) แล้วรอเครื่องบูตประมาณ <strong>2–5 นาที</strong></li>
+        <li style="margin-bottom: 8px;">เมื่อหน้าต่างจอดำแสดงขึ้น ให้สังเกตบรรทัด <strong>IPv4 addresses</strong>:</li>
+      </ol>
+
+      <div class="terminal-box">
+        <div class="terminal-header">
+          <span class="dot dot-red"></span>
+          <span class="dot dot-yellow"></span>
+          <span class="dot dot-green"></span>
+          <span style="font-size: 11px; color: #94a3b8; margin-left: 8px;">Farm Workshop Console</span>
+        </div>
+        <div>Welcome to Farm Workshop (Home Assistant OS)</div>
+        <div style="margin-top: 8px;">IPv4 addresses for enp0s3: <span class="highlight-ip">192.168.1.50</span>/24 &nbsp;&nbsp;<span style="color: #64748b;">(Windows / Mac Intel)</span></div>
+        <div>IPv4 addresses for enp0s8: <span class="highlight-ip">192.168.1.50</span>/24 &nbsp;&nbsp;<span style="color: #64748b;">(Mac Apple Silicon)</span></div>
+        <div style="margin-top: 8px; color: #38bdf8;">URL: http://192.168.1.50:8123  หรือ  http://192.168.1.50</div>
+      </div>
+
+      <div class="callout success">
+        <div class="callout-icon">🎯</div>
+        <div>
+          <strong>ทดสอบเปิดหน้าควบคุม:</strong> เปิดเว็บเบราว์เซอร์แล้วพิมพ์ <code>http://&lt;เลข IP ของท่าน&gt;</code> (เช่น <code>http://192.168.1.50</code>)<br>
+          หากเห็นหน้า <strong>Login ของ Home Assistant</strong> แสดงว่าเครื่องของท่านพร้อมสำหรับการอบรมแล้ว! <em>(ยังไม่ต้องเข้าระบบ วิทยากรจะแจ้งชื่อผู้ใช้และรหัสผ่านในวันอบรม)</em>
+        </div>
+      </div>
+
+      <div class="callout danger">
+        <div class="callout-icon">🚫</div>
+        <div>
+          <strong>ห้ามใช้งานผ่าน <code>homeassistant.local</code>:</strong> ในห้องอบรมทุกคนจะอยู่ในเครือข่ายเดียวกัน หากใช้ชื่อนี้ระบบจะชนกัน ให้จดจำและเข้าใช้งานด้วยหมายเลข IP ตัวเลขเสมอ
+        </div>
+      </div>
+    </div>
+
+    <!-- Safe Shutdown -->
+    <div class="card">
+      <div class="section-title">
+        <span class="step-badge">5</span>
+        การปิดเครื่องเสมือนอย่างปลอดภัย (Safe Shutdown)
+      </div>
+
+      <p style="margin-bottom: 14px; font-size: 15px;">เมื่อทดสอบเสร็จเรียบร้อยแล้ว ให้ปิดเครื่องตามขั้นตอนดังนี้เพื่อไม่ให้ข้อมูลเสียหาย:</p>
+
+      <div style="display: flex; gap: 16px; flex-wrap: wrap;">
+        <div style="flex: 1; min-width: 250px; padding: 18px; background: #f0fdf4; border: 1px solid #86efac; border-radius: 8px;">
+          <div style="font-weight: 700; color: #166534; margin-bottom: 6px;">✅ วิธีปิดที่ถูกต้อง:</div>
+          <div style="font-size: 14px; color: #1e293b;">
+            1. กดปุ่มกากบาทปิดหน้าต่างจอดำของเครื่องเสมือน<br>
+            2. เลือก <strong>"Send the shutdown signal"</strong><br>
+            3. กดปุ่ม <strong>OK</strong> ระบบจะจัดเก็บข้อมูลและปิดตัวเองลงเรียบร้อย
+          </div>
+        </div>
+
+        <div style="flex: 1; min-width: 250px; padding: 18px; background: #fef2f2; border: 1px solid #fca5a5; border-radius: 8px;">
+          <div style="font-weight: 700; color: #991b1b; margin-bottom: 6px;">❌ ข้อห้าม:</div>
+          <div style="font-size: 14px; color: #1e293b;">
+            • <strong>ห้ามเลือก "Power off"</strong> เด็ดขาด เพราะเทียบเท่ากับการดึงปลั๊กไฟ อาจทำให้ไฟล์พังจนต้องโหลดใหม่<br>
+            • <strong>ไม่ต้องเลือก "Save the machine state"</strong>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Checklist -->
+    <div class="card">
+      <div class="section-title">
+        <span class="step-badge">6</span>
+        เช็กลิสต์ของที่ต้องนำมาในวันอบรม
+      </div>
+
+      <ul class="checklist">
+        <li class="checklist-item">
+          <span class="check-icon">✓</span>
+          <span>แล็ปท็อปที่ติดตั้ง VirtualBox และนำเข้าเครื่อง Farm Workshop สำเร็จแล้ว</span>
+        </li>
+        <li class="checklist-item">
+          <span class="check-icon">✓</span>
+          <span>สายชาร์จ / อะแดปเตอร์จ่ายไฟของแล็ปท็อป (แนะนำพกปลั๊กพ่วงมาด้วย)</span>
+        </li>
+        <li class="checklist-item">
+          <span class="check-icon">✓</span>
+          <span>สมาร์ตโฟน (เปิด Wi-Fi ได้) สำหรับใช้ทดลองเปิดแดชบอร์ดควบคุม</span>
+        </li>
+        <li class="checklist-item">
+          <span class="check-icon">✓</span>
+          <span>เมาส์แยก (แนะนำ เพื่อความสะดวกในการลากวางบล็อกคำสั่ง)</span>
+        </li>
+      </ul>
+    </div>
+
+    <!-- Troubleshooting -->
+    <div class="card">
+      <div class="section-title">
+        <span class="step-badge">7</span>
+        การแก้ไขปัญหาเบื้องต้น (FAQ / Troubleshooting)
+      </div>
+
+      <details style="margin-bottom: 12px; padding: 12px; background: #f8fafc; border-radius: 8px; border: 1px solid var(--border);">
+        <summary style="font-weight: 600; cursor: pointer; color: #1e293b;">❓ หน้าจอดำขึ้นเลข IP เป็น 169.254.x.x หรือไม่มีเลข IP</summary>
+        <div style="font-size: 14px; color: #475569; margin-top: 10px; line-height: 1.6;">
+          เกิดจากแล็ปท็อปไม่ได้ต่อ Wi-Fi ก่อนเปิดเครื่องเสมือน หรือการ์ดเน็ตเวิร์กตั้งค่าผิด<br>
+          <strong>วิธีแก้:</strong> ปิดเครื่องด้วย Shutdown signal → ต่อ Wi-Fi ของเครื่องหลักให้เรียบร้อย → ไปที่ VirtualBox Settings → Network → ตรวจสอบว่าเลือก Bridged Adapter และเลือกการ์ด Wi-Fi (เช่น <code>en0: Wi-Fi</code> บน Mac) → กด Start ใหม่อีกครั้ง
+        </div>
+      </details>
+
+      <details style="margin-bottom: 12px; padding: 12px; background: #f8fafc; border-radius: 8px; border: 1px solid var(--border);">
+        <summary style="font-weight: 600; cursor: pointer; color: #1e293b;">❓ พิมพ์เลข IP แล้วหน้าเว็บไม่โหลดหรือโหลดค้าง</summary>
+        <div style="font-size: 14px; color: #475569; margin-top: 10px; line-height: 1.6;">
+          <strong>วิธีแก้:</strong><br>
+          1. ตรวจสอบว่าพิมพ์ขึ้นต้นด้วย <code>http://</code> ไม่ใช่ <code>https://</code><br>
+          2. ให้ลองเติมพอร์ต <code>:8123</code> ต่อท้าย เช่น <code>http://192.168.1.50:8123</code><br>
+          3. หากแล็ปท็อปเปิด VPN ให้กดปิด (Disconnect) VPN ก่อนใช้งาน
+        </div>
+      </details>
+
+      <details style="margin-bottom: 12px; padding: 12px; background: #f8fafc; border-radius: 8px; border: 1px solid var(--border);">
+        <summary style="font-weight: 600; cursor: pointer; color: #1e293b;">❓ ติดตั้งแล้วเผลอกด Power off เครื่องมีโอกาสพังไหม?</summary>
+        <div style="font-size: 14px; color: #475569; margin-top: 10px; line-height: 1.6;">
+          หากกดไปเพียงครั้งเดียวและระบบยังไม่เริ่มเขียนฐานข้อมูล ระบบอาจยังบูตขึ้นได้ แต่หากเปิดแล้วขึ้น Error จอดำค้าง วิธีแก้ที่ดีที่สุดคือ ลบเครื่องเสมือนตัวเดิมออก (Remove only) แล้วทำขั้นตอน <strong>Import Appliance...</strong> ไฟล์ <code>.ova</code> ใหม่อีกครั้ง
+        </div>
+      </details>
+    </div>
+
+    <!-- Footer -->
+    <footer>
+      <p>หลักสูตรอบรมเชิงปฏิบัติการ Smart Farm IoT เพื่อการเกษตรแม่นยำและระบบควบคุมอัจฉริยะ</p>
+      <p style="margin-top: 4px; font-size: 12px; color: #94a3b8;">เอกสารคู่มือจัดเก็บใน <code>htdocs/cmu_aiot/คู่มือ/</code></p>
+    </footer>
+
+  </div>
+
+  <script>
+    function switchTab(evt, tabName) {
+      const tabContents = document.querySelectorAll('.tab-content');
+      tabContents.forEach(content => content.classList.remove('active'));
+
+      const tabBtns = document.querySelectorAll('.tab-btn');
+      tabBtns.forEach(btn => btn.classList.remove('active'));
+
+      document.getElementById(tabName).classList.add('active');
+      evt.currentTarget.classList.add('active');
+    }
+  </script>
+</body>
+</html>

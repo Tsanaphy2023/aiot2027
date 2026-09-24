@@ -1,0 +1,1214 @@
+<!DOCTYPE html>
+<html lang="th" data-theme="dark">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Admin Portal — LEQs SciRBRU Workshop CMS</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Prompt:wght@300;400;500;600;700;800&family=Sarabun:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <link rel="stylesheet" href="style.css">
+  <style>
+    /* Modeled after https://scicenter.rbru.ac.th/globe2026/pages/admin_login.php */
+    body {
+      font-family: 'Prompt', var(--font-main), sans-serif;
+      background-color: #0b1120;
+      color: #f1f5f9;
+      min-height: 100vh;
+      margin: 0;
+      display: flex;
+      flex-direction: column;
+    }
+
+    /* Ambient animated backdrop */
+    .portal-bg-layer {
+      position: fixed;
+      inset: 0;
+      z-index: -1;
+      overflow: hidden;
+      pointer-events: none;
+    }
+    .portal-bg-glow1 {
+      position: absolute;
+      top: -10%;
+      left: 20%;
+      width: 500px;
+      height: 500px;
+      background: radial-gradient(circle, rgba(16, 185, 129, 0.15) 0%, transparent 70%);
+      filter: blur(80px);
+    }
+    .portal-bg-glow2 {
+      position: absolute;
+      bottom: -10%;
+      right: 15%;
+      width: 600px;
+      height: 600px;
+      background: radial-gradient(circle, rgba(249, 115, 22, 0.12) 0%, transparent 70%);
+      filter: blur(90px);
+    }
+
+    /* Portal Top Navbar */
+    .portal-header {
+      background: rgba(15, 23, 42, 0.85);
+      backdrop-filter: blur(20px);
+      -webkit-backdrop-filter: blur(20px);
+      border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+      position: sticky;
+      top: 0;
+      z-index: 100;
+      padding: 0.85rem 1.5rem;
+    }
+    .portal-header-inner {
+      max-width: 1400px;
+      margin: 0 auto;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+    .portal-logo-link {
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+      text-decoration: none;
+    }
+    .portal-logo-icon {
+      width: 38px;
+      height: 38px;
+      background: linear-gradient(135deg, #10b981 0%, #059669 100%);
+      border-radius: 10px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 1.2rem;
+      color: #ffffff;
+      box-shadow: 0 4px 12px rgba(16, 185, 129, 0.3);
+    }
+    .portal-logo-text {
+      display: flex;
+      flex-direction: column;
+    }
+    .portal-logo-main {
+      font-size: 1.15rem;
+      font-weight: 800;
+      letter-spacing: 0.5px;
+      color: #fef08a;
+      line-height: 1.15;
+    }
+    .portal-logo-sub {
+      font-size: 0.72rem;
+      font-weight: 700;
+      color: #34d399;
+      letter-spacing: 1.2px;
+      text-transform: uppercase;
+    }
+
+    .portal-nav-links {
+      display: flex;
+      align-items: center;
+      gap: 1rem;
+    }
+    .portal-nav-item {
+      color: #94a3b8;
+      text-decoration: none;
+      font-size: 0.88rem;
+      font-weight: 500;
+      display: inline-flex;
+      align-items: center;
+      gap: 0.4rem;
+      padding: 0.45rem 0.85rem;
+      border-radius: 8px;
+      transition: all 0.2s;
+    }
+    .portal-nav-item:hover {
+      color: #ffffff;
+      background: rgba(255, 255, 255, 0.05);
+    }
+    .portal-nav-item.active {
+      color: #f97316;
+      font-weight: 700;
+    }
+
+    /* Glass Card (From GLOBE admin_login.php) */
+    .login-section {
+      min-height: calc(100vh - 160px);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 2.5rem 1.25rem;
+      position: relative;
+    }
+    .glass-card {
+      background: rgba(255, 255, 255, 0.96);
+      backdrop-filter: blur(25px);
+      -webkit-backdrop-filter: blur(25px);
+      border: 1px solid rgba(255, 255, 255, 0.6);
+      box-shadow: 0 25px 60px rgba(0, 0, 0, 0.45);
+      border-radius: 24px;
+      width: 100%;
+      max-width: 440px;
+      padding: 2.5rem 2.25rem;
+      position: relative;
+      overflow: hidden;
+      color: #1e293b;
+    }
+    .glass-top-accent {
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      height: 6px;
+      background: linear-gradient(90deg, #10b981 0%, #06b6d4 50%, #f97316 100%);
+    }
+    .shield-avatar {
+      width: 76px;
+      height: 76px;
+      background: linear-gradient(135deg, #f0fdf4 0%, #ffffff 100%);
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin: 0 auto 1.25rem auto;
+      box-shadow: 0 10px 25px rgba(16, 185, 129, 0.2);
+      border: 2px solid #bbf7d0;
+      position: relative;
+    }
+    .shield-ping {
+      position: absolute;
+      inset: 0;
+      border-radius: 50%;
+      background: #10b981;
+      opacity: 0.25;
+      animation: subtle-ping 2.5s cubic-bezier(0, 0, 0.2, 1) infinite;
+    }
+    @keyframes subtle-ping {
+      75%, 100% {
+        transform: scale(1.6);
+        opacity: 0;
+      }
+    }
+
+    .form-input-box {
+      position: relative;
+      margin-bottom: 1.25rem;
+    }
+    .form-input-box label {
+      display: block;
+      font-size: 0.85rem;
+      font-weight: 700;
+      color: #334155;
+      margin-bottom: 0.45rem;
+      margin-left: 0.25rem;
+    }
+    .form-input-field {
+      width: 100%;
+      background: #ffffff;
+      border: 1.5px solid #cbd5e1;
+      border-radius: 12px;
+      padding: 0.85rem 1rem 0.85rem 2.85rem;
+      font-family: 'Prompt', sans-serif;
+      font-size: 0.95rem;
+      color: #0f172a;
+      transition: all 0.25s ease;
+      box-sizing: border-box;
+    }
+    .form-input-field:focus {
+      border-color: #10b981;
+      box-shadow: 0 0 0 4px rgba(16, 185, 129, 0.15);
+      outline: none;
+    }
+    .form-input-icon {
+      position: absolute;
+      left: 1rem;
+      bottom: 0.9rem;
+      color: #94a3b8;
+      font-size: 1.05rem;
+      pointer-events: none;
+    }
+    .btn-gradient-submit {
+      width: 100%;
+      background: linear-gradient(135deg, #10b981 0%, #059669 100%);
+      color: #ffffff;
+      border: none;
+      border-radius: 12px;
+      padding: 0.95rem;
+      font-family: 'Prompt', sans-serif;
+      font-size: 1.05rem;
+      font-weight: 700;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 0.5rem;
+      box-shadow: 0 10px 20px rgba(16, 185, 129, 0.35);
+      transition: all 0.25s ease;
+      margin-top: 0.5rem;
+    }
+    .btn-gradient-submit:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 14px 28px rgba(16, 185, 129, 0.45);
+    }
+    .btn-gradient-submit:active {
+      transform: translateY(0);
+    }
+
+    /* Admin Console View */
+    .admin-container {
+      max-width: 1440px;
+      margin: 0 auto;
+      padding: 1.5rem;
+      flex: 1;
+      width: 100%;
+      box-sizing: border-box;
+    }
+    .admin-top-bar {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      background: var(--bg-surface);
+      border: 1px solid var(--border-color);
+      border-radius: var(--radius-lg);
+      padding: 1rem 1.75rem;
+      margin-bottom: 2rem;
+      backdrop-filter: blur(16px);
+      flex-wrap: wrap;
+      gap: 1rem;
+    }
+    .admin-nav-tabs {
+      display: flex;
+      gap: 0.5rem;
+      list-style: none;
+      padding: 0;
+      margin: 0;
+      flex-wrap: wrap;
+    }
+    .admin-tab-btn {
+      background: transparent;
+      border: none;
+      color: var(--text-muted);
+      font-family: var(--font-main);
+      font-size: 0.92rem;
+      font-weight: 600;
+      padding: 0.6rem 1.1rem;
+      border-radius: var(--radius-sm);
+      cursor: pointer;
+      transition: all 0.2s;
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+    }
+    .admin-tab-btn:hover {
+      color: var(--text-main);
+      background: rgba(255, 255, 255, 0.05);
+    }
+    .admin-tab-btn.active {
+      color: #10b981;
+      background: rgba(16, 185, 129, 0.12);
+      border: 1px solid rgba(16, 185, 129, 0.3);
+    }
+
+    /* Table styles */
+    .data-table-card {
+      background: var(--bg-card);
+      border: 1px solid var(--border-color);
+      border-radius: var(--radius-lg);
+      padding: 1.75rem;
+      overflow-x: auto;
+    }
+    .table-toolbar {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      flex-wrap: wrap;
+      gap: 1rem;
+      margin-bottom: 1.5rem;
+    }
+    .search-input {
+      background: rgba(15, 23, 42, 0.6);
+      border: 1px solid var(--border-color);
+      border-radius: var(--radius-full);
+      padding: 0.6rem 1.25rem;
+      color: var(--text-main);
+      font-family: var(--font-main);
+      font-size: 0.88rem;
+      min-width: 280px;
+    }
+    .admin-table {
+      width: 100%;
+      border-collapse: collapse;
+      text-align: left;
+      font-size: 0.88rem;
+    }
+    .admin-table th {
+      background: rgba(15, 23, 42, 0.8);
+      color: var(--text-muted);
+      font-weight: 600;
+      padding: 0.85rem 1rem;
+      border-bottom: 2px solid var(--border-color);
+      white-space: nowrap;
+    }
+    .admin-table td {
+      padding: 0.85rem 1rem;
+      border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+      vertical-align: middle;
+    }
+    .admin-table tr:hover {
+      background: rgba(255, 255, 255, 0.02);
+    }
+
+    .badge-role-teacher {
+      background: rgba(14, 165, 233, 0.15);
+      color: #38bdf8;
+      border: 1px solid rgba(14, 165, 233, 0.3);
+      padding: 0.2rem 0.6rem;
+      border-radius: var(--radius-full);
+      font-size: 0.75rem;
+      font-weight: 600;
+    }
+    .badge-role-student {
+      background: rgba(16, 185, 129, 0.15);
+      color: #34d399;
+      border: 1px solid rgba(16, 185, 129, 0.3);
+      padding: 0.2rem 0.6rem;
+      border-radius: var(--radius-full);
+      font-size: 0.75rem;
+      font-weight: 600;
+    }
+
+    /* Modal */
+    .modal-overlay {
+      position: fixed;
+      top: 0; left: 0; right: 0; bottom: 0;
+      background: rgba(11, 17, 32, 0.85);
+      backdrop-filter: blur(8px);
+      display: none;
+      align-items: center;
+      justify-content: center;
+      z-index: 1500;
+    }
+    .modal-content {
+      background: var(--bg-card);
+      border: 1px solid var(--border-color);
+      border-radius: var(--radius-lg);
+      padding: 2rem;
+      max-width: 500px;
+      width: 90%;
+      box-shadow: var(--shadow-lg);
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Ambient background glow effects -->
+  <div class="portal-bg-layer">
+    <div class="portal-bg-glow1"></div>
+    <div class="portal-bg-glow2"></div>
+  </div>
+
+  <!-- ==================== PORTAL TOP BAR ==================== -->
+  <header class="portal-header">
+    <div class="portal-header-inner">
+      <a href="index.html" class="portal-logo-link">
+        <div class="portal-logo-icon">
+          <i class="fas fa-seedling"></i>
+        </div>
+        <div class="portal-logo-text">
+          <span class="portal-logo-main">SciRBRU</span>
+          <span class="portal-logo-sub">Young Digital Agri-Innovator</span>
+        </div>
+      </a>
+
+      <nav class="portal-nav-links">
+        <a href="index.html" class="portal-nav-item">
+          <i class="fas fa-home"></i> <span>หน้าหลัก</span>
+        </a>
+        <a href="index.html#tab-code" onclick="localStorage.setItem('goto_tab', 'code')" class="portal-nav-item">
+          <i class="fas fa-robot"></i> <span>AI Coding</span>
+        </a>
+        <a href="index.html#tab-lab" onclick="localStorage.setItem('goto_tab', 'lab')" class="portal-nav-item">
+          <i class="fas fa-gamepad"></i> <span>Virtual Lab</span>
+        </a>
+        <a href="index.html#tab-participants" onclick="localStorage.setItem('goto_tab', 'participants')" class="portal-nav-item">
+          <i class="fas fa-list-check"></i> <span>รายชื่อผู้สมัคร</span>
+        </a>
+        <a href="admin.html" class="portal-nav-item active">
+          <i class="fas fa-user-shield"></i> <span>Admin Portal</span>
+        </a>
+      </nav>
+    </div>
+  </header>
+
+  <!-- ==================== LOGIN VIEW (Modeled on scicenter.rbru.ac.th/globe2026/pages/admin_login.php) ==================== -->
+  <main class="login-section" id="admin-login-view">
+    <div class="glass-card">
+      <div class="glass-top-accent"></div>
+      
+      <!-- Top Shield Avatar -->
+      <div class="text-center" style="text-align: center; margin-bottom: 1.5rem;">
+        <div class="shield-avatar">
+          <div class="shield-ping"></div>
+          <i class="fas fa-user-shield" style="font-size: 2rem; color: #10b981; position: relative; z-index: 2;"></i>
+        </div>
+        <h2 style="font-size: 1.75rem; font-weight: 800; color: #0f172a; margin: 0 0 0.35rem 0; font-family: 'Prompt', sans-serif;">
+          Admin Portal
+        </h2>
+        <p style="font-size: 0.92rem; color: #64748b; margin: 0;">
+          เข้าสู่ระบบจัดการข้อมูลโครงการ
+        </p>
+      </div>
+
+      <!-- Login Form with user admin / password LEQs -->
+      <form id="login-form" onsubmit="handleAdminLogin(event)">
+        
+        <div class="form-input-box">
+          <label for="login-username">บัญชีผู้ใช้ (Username)</label>
+          <div style="position: relative;">
+            <i class="fas fa-user form-input-icon"></i>
+            <input type="text" id="login-username" class="form-input-field" value="admin" placeholder="กรอกชื่อผู้ใช้..." required autofocus>
+          </div>
+        </div>
+
+        <div class="form-input-box">
+          <label for="login-password">รหัสผ่าน (Password)</label>
+          <div style="position: relative;">
+            <i class="fas fa-lock form-input-icon"></i>
+            <input type="password" id="login-password" class="form-input-field" value="LEQs" placeholder="กรอกรหัสผ่าน..." required>
+            <button type="button" onclick="togglePasswordVisibility()" style="position: absolute; right: 0.9rem; bottom: 0.85rem; background: none; border: none; color: #94a3b8; cursor: pointer; font-size: 1rem;">
+              <i class="fas fa-eye" id="toggle-pw-icon"></i>
+            </button>
+          </div>
+        </div>
+
+        <button type="submit" class="btn-gradient-submit" id="btn-login-submit">
+          <span>เข้าสู่ระบบ</span>
+          <i class="fas fa-arrow-right" style="font-size: 0.9rem;"></i>
+        </button>
+
+        <div id="login-error-msg" style="display: none; background: #fee2e2; border: 1px solid #f87171; color: #991b1b; padding: 0.75rem 1rem; border-radius: 10px; font-size: 0.84rem; margin-top: 1rem; text-align: center;"></div>
+      </form>
+
+      <!-- Back to Main Site -->
+      <div style="margin-top: 1.75rem; padding-top: 1.25rem; border-top: 1px solid #e2e8f0; text-align: center;">
+        <a href="index.html" style="display: inline-flex; align-items: center; gap: 0.45rem; color: #64748b; text-decoration: none; font-size: 0.88rem; font-weight: 600; transition: all 0.2s;" onmouseover="this.style.color='#10b981'" onmouseout="this.style.color='#64748b'">
+          <i class="fas fa-arrow-left"></i>
+          <span>กลับสำหรับหน้าหลัก</span>
+        </a>
+      </div>
+
+    </div>
+  </main>
+
+  <!-- ==================== ADMIN CONSOLE APP VIEW ==================== -->
+  <div class="admin-container" id="admin-app" style="display: none;">
+
+    <!-- Top Admin Bar -->
+    <header class="admin-top-bar">
+      <div style="display: flex; align-items: center; gap: 0.85rem;">
+        <div class="brand-badge-logo" style="width: 44px; height: 44px; font-size: 1.3rem; background: linear-gradient(135deg, #10b981 0%, #059669 100%); color: #fff; border-radius: 12px; display: flex; align-items: center; justify-content: center;">⚙️</div>
+        <div>
+          <div style="font-size: 1.2rem; font-weight: 700; color: #ffffff;">ระบบหลังบ้าน LEQs SciRBRU</div>
+          <div style="font-size: 0.74rem; color: var(--primary);">ฐานข้อมูลผู้สมัครและปรับปรุงเนื้อหาเพจ (SQLite3 Active & Verified)</div>
+        </div>
+      </div>
+
+      <!-- Navigation Tabs -->
+      <ul class="admin-nav-tabs">
+        <li><button class="admin-tab-btn active" id="atab-btn-stats" onclick="switchAdminTab('stats')">📊 สถิติ & ภาพรวม</button></li>
+        <li><button class="admin-tab-btn" id="atab-btn-users" onclick="switchAdminTab('users')">👥 รายชื่อผู้สมัคร (<span id="badge-total-count">0</span>)</button></li>
+        <li><button class="admin-tab-btn" id="atab-btn-cms" onclick="switchAdminTab('cms')">✍️ จัดการเนื้อหาเพจ (CMS)</button></li>
+        <li><button class="admin-tab-btn" id="atab-btn-quiz" onclick="switchAdminTab('quiz')">📝 ผลคะแนนแบบทดสอบ</button></li>
+      </ul>
+
+      <!-- Quick Actions -->
+      <div style="display: flex; gap: 0.6rem; align-items: center;">
+        <a href="index.html" target="_blank" class="btn-secondary" style="font-size: 0.82rem; padding: 0.45rem 0.95rem;">
+          <span>🌐 ดูหน้าเว็บหลัก</span>
+        </a>
+        <button class="btn-secondary" onclick="handleAdminLogout()" style="font-size: 0.82rem; padding: 0.45rem 0.95rem; color: var(--danger); border-color: rgba(239, 68, 68, 0.4);">
+          <span>🚪 ออกจากระบบ</span>
+        </button>
+      </div>
+    </header>
+
+    <!-- ==============================================================
+         TAB 1: STATS & OVERVIEW
+         ============================================================== -->
+    <section class="tab-pane active" id="atab-stats">
+      
+      <div class="hero-stats-grid" style="margin-bottom: 2rem;">
+        <div class="stat-pill">
+          <div class="stat-icon">👥</div>
+          <div>
+            <div class="stat-val" id="stat-total-val">0 / 60</div>
+            <div class="stat-label">ยอดผู้สมัครทั้งหมด (ความจุ 60 ที่นั่ง)</div>
+          </div>
+        </div>
+        <div class="stat-pill">
+          <div class="stat-icon">👨‍🏫</div>
+          <div>
+            <div class="stat-val" id="stat-teacher-val">0</div>
+            <div class="stat-label">คุณครูที่เข้าร่วม</div>
+          </div>
+        </div>
+        <div class="stat-pill">
+          <div class="stat-icon">🎓</div>
+          <div>
+            <div class="stat-val" id="stat-student-val">0</div>
+            <div class="stat-label">นักเรียนที่เข้าร่วม</div>
+          </div>
+        </div>
+        <div class="stat-pill">
+          <div class="stat-icon">🏫</div>
+          <div>
+            <div class="stat-val" id="stat-school-val">0</div>
+            <div class="stat-label">สถานศึกษาทั้งหมด</div>
+          </div>
+        </div>
+        <div class="stat-pill">
+          <div class="stat-icon">✅</div>
+          <div>
+            <div class="stat-val" id="stat-checkin-val">0</div>
+            <div class="stat-label">เช็คอินวันงานแล้ว</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Capacity Progress -->
+      <div class="data-table-card" style="margin-bottom: 2rem;">
+        <div style="display: flex; justify-content: space-between; margin-bottom: 0.75rem;">
+          <span style="font-weight: 600; font-size: 0.95rem;">ความคืบหน้าการรับสมัคร</span>
+          <span id="capacity-text" style="color: var(--primary); font-weight: 700;">0%</span>
+        </div>
+        <div style="width: 100%; height: 12px; background: rgba(255, 255, 255, 0.08); border-radius: var(--radius-full); overflow: hidden;">
+          <div id="capacity-bar" style="width: 0%; height: 100%; background: var(--primary-gradient); transition: width 0.5s ease;"></div>
+        </div>
+      </div>
+
+      <!-- Quick Action Cards -->
+      <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 1.5rem;">
+        <div class="data-table-card" style="cursor: pointer;" onclick="switchAdminTab('users')">
+          <div style="font-size: 2rem; margin-bottom: 0.5rem;">📋</div>
+          <h3 style="font-size: 1.1rem; font-weight: 700; margin-bottom: 0.25rem;">จัดการรายชื่อและเช็คอิน</h3>
+          <p style="font-size: 0.85rem; color: var(--text-muted);">ตรวจสอบข้อมูลผู้สมัคร เช็คอินหน้างาน และส่งออกข้อมูลเป็น CSV</p>
+        </div>
+        <div class="data-table-card" style="cursor: pointer;" onclick="switchAdminTab('cms')">
+          <div style="font-size: 2rem; margin-bottom: 0.5rem;">✍️</div>
+          <h3 style="font-size: 1.1rem; font-weight: 700; margin-bottom: 0.25rem;">แก้ไขเนื้อหาหน้าเว็บ (CMS)</h3>
+          <p style="font-size: 0.85rem; color: var(--text-muted);">ปรับแต่งข้อความประกาศ กำหนดการ และสถานที่จัดอบรม</p>
+        </div>
+        <div class="data-table-card" style="cursor: pointer;" onclick="exportParticipantsCsv()">
+          <div style="font-size: 2rem; margin-bottom: 0.5rem;">📥</div>
+          <h3 style="font-size: 1.1rem; font-weight: 700; margin-bottom: 0.25rem;">ส่งออกข้อมูลผู้สมัคร (CSV)</h3>
+          <p style="font-size: 0.85rem; color: var(--text-muted);">ดาวน์โหลดไฟล์รายชื่อผู้สมัครพร้อมสถานะสำหรับเปิดใน Microsoft Excel</p>
+        </div>
+      </div>
+
+    </section>
+
+    <!-- ==============================================================
+         TAB 2: PARTICIPANTS DIRECTORY
+         ============================================================== -->
+    <section class="tab-pane" id="atab-users">
+      <div class="data-table-card">
+        
+        <div class="table-toolbar">
+          <div style="display: flex; gap: 0.75rem; align-items: center; flex-wrap: wrap;">
+            <input type="text" class="search-input" id="search-input" placeholder="🔍 ค้นหาชื่อ, โรงเรียน, หรือรหัส..." oninput="filterParticipants()">
+            <select class="form-input" id="filter-role" onchange="filterParticipants()" style="padding: 0.6rem 1rem; width: auto;">
+              <option value="all">ทุกบทบาท</option>
+              <option value="teacher">ครูผู้สอน</option>
+              <option value="student">นักเรียน</option>
+            </select>
+            <select class="form-input" id="filter-checkin" onchange="filterParticipants()" style="padding: 0.6rem 1rem; width: auto;">
+              <option value="all">สถานะเช็คอินทั้งหมด</option>
+              <option value="1">เช็คอินแล้ว ✅</option>
+              <option value="0">ยังไม่เช็คอิน ⏳</option>
+            </select>
+          </div>
+
+          <div style="display: flex; gap: 0.6rem;">
+            <button class="btn-secondary" onclick="exportParticipantsCsv()" style="font-size: 0.85rem;">
+              <span>📥 ดาวน์โหลด CSV</span>
+            </button>
+            <button class="btn-cta" onclick="openAddParticipantModal()" style="font-size: 0.85rem;">
+              <span>➕ เพิ่มผู้สมัคร</span>
+            </button>
+          </div>
+        </div>
+
+        <table class="admin-table">
+          <thead>
+            <tr>
+              <th>รหัสสมัคร</th>
+              <th>ชื่อ - นามสกุล</th>
+              <th>ประเภท</th>
+              <th>โรงเรียน / หน่วยงาน</th>
+              <th>ระดับ / กลุ่มสาระ</th>
+              <th>เบอร์โทร</th>
+              <th>อาหาร</th>
+              <th>เช็คอิน</th>
+              <th>จัดการ</th>
+            </tr>
+          </thead>
+          <tbody id="participants-table-body">
+            <tr>
+              <td colspan="9" style="text-align: center; color: var(--text-dim); padding: 2rem;">กำลังโหลดข้อมูล...</td>
+            </tr>
+          </tbody>
+        </table>
+
+      </div>
+    </section>
+
+    <!-- ==============================================================
+         TAB 3: CMS SITE CONTENT MANAGEMENT
+         ============================================================== -->
+    <section class="tab-pane" id="atab-cms">
+      <div class="data-table-card" style="max-width: 900px; margin: 0 auto;">
+        <h3 style="font-size: 1.25rem; font-weight: 700; margin-bottom: 0.5rem;">✍️ จัดการเนื้อหาและข้อความประชาสัมพันธ์</h3>
+        <p style="font-size: 0.88rem; color: var(--text-muted); margin-bottom: 2rem;">
+          แก้ไขข้อความที่แสดงบนหน้าแรกของโครงการ ข้อมูลจะถูกจัดเก็บในฐานข้อมูล SQLite3 และแสดงผลทันที
+        </p>
+
+        <form id="cms-form" onsubmit="handleSaveCmsContent(event)">
+          <div class="form-group">
+            <label>📢 ข้อความแถบประกาศด้านบน (Announcement Banner):</label>
+            <input type="text" class="form-input" id="cms-announcement" placeholder="ข้อความประกาศด่วนด้านบนเว็บ...">
+          </div>
+
+          <div class="form-group">
+            <label>🌿 ชื่อหัวข้อหลักของโครงการ (Hero Title):</label>
+            <input type="text" class="form-input" id="cms-hero-title" placeholder="ชื่อโครงการหลัก...">
+          </div>
+
+          <div class="form-group">
+            <label>📝 คำอธิบายโครงการ (Hero Subtitle):</label>
+            <textarea class="form-input" id="cms-hero-subtitle" rows="3" placeholder="คำอธิบายรายละเอียดโครงการ..."></textarea>
+          </div>
+
+          <div class="form-row">
+            <div class="form-group">
+              <label>📅 วันที่จัดกิจกรรมอบรม:</label>
+              <input type="text" class="form-input" id="cms-dates" placeholder="เช่น 25 - 26 ธันวาคม 2568">
+            </div>
+            <div class="form-group">
+              <label>📍 สถานที่จัดอบรม:</label>
+              <input type="text" class="form-input" id="cms-location" placeholder="เช่น อาคาร 36 คณะวิทยาศาสตร์และเทคโนโลยี มรภ.รำไพพรรณี">
+            </div>
+          </div>
+
+          <div style="display: flex; justify-content: flex-end; gap: 1rem; margin-top: 1.5rem;">
+            <button type="submit" class="btn-cta">
+              <span>💾 บันทึกเนื้อหาเว็บไซต์</span>
+            </button>
+          </div>
+          <div id="cms-save-msg" style="color: var(--primary); font-size: 0.88rem; margin-top: 1rem; display: none; text-align: right;"></div>
+        </form>
+      </div>
+    </section>
+
+    <!-- ==============================================================
+         TAB 4: QUIZ RECORDS
+         ============================================================== -->
+    <section class="tab-pane" id="atab-quiz">
+      <div class="data-table-card">
+        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1.5rem;">
+          <h3 style="font-size: 1.2rem; font-weight: 700;">📝 ผลคะแนนแบบทดสอบ (Pre-test / Post-test)</h3>
+          <button class="btn-secondary" onclick="loadQuizRecords()" style="font-size: 0.85rem;">🔄 รีเฟรช</button>
+        </div>
+
+        <table class="admin-table">
+          <thead>
+            <tr>
+              <th>#</th>
+              <th>ชื่อ - นามสกุล</th>
+              <th>โรงเรียน</th>
+              <th>ประเภทการสอบ</th>
+              <th>คะแนนที่ได้</th>
+              <th>เวลาที่ส่งคำตอบ</th>
+            </tr>
+          </thead>
+          <tbody id="quiz-records-table-body">
+            <tr>
+              <td colspan="6" style="text-align: center; color: var(--text-dim); padding: 2rem;">กำลังโหลดผลคะแนน...</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </section>
+
+  </div>
+
+  <!-- ==================== MODAL: ADD PARTICIPANT ==================== -->
+  <div class="modal-overlay" id="add-modal">
+    <div class="modal-content">
+      <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1.5rem;">
+        <h3 style="font-size: 1.2rem; font-weight: 700;">➕ เพิ่มผู้สมัครเข้าร่วมอบรม</h3>
+        <button onclick="closeAddParticipantModal()" style="background: none; border: none; color: var(--text-muted); font-size: 1.5rem; cursor: pointer;">&times;</button>
+      </div>
+
+      <form id="manual-add-form" onsubmit="handleManualAdd(event)">
+        <div class="form-row">
+          <div class="form-group" style="flex: 1;">
+            <label>คำนำหน้า:</label>
+            <select class="form-input" id="m-prefix">
+              <option value="นาย">นาย</option>
+              <option value="นาง">นาง</option>
+              <option value="นางสาว">นางสาว</option>
+              <option value="ด.ช.">ด.ช.</option>
+              <option value="ด.ญ.">ด.ญ.</option>
+              <option value="อาจารย์">อาจารย์</option>
+              <option value="ดร.">ดร.</option>
+            </select>
+          </div>
+          <div class="form-group" style="flex: 2;">
+            <label>ชื่อ - นามสกุล:</label>
+            <input type="text" class="form-input" id="m-fullname" required>
+          </div>
+        </div>
+
+        <div class="form-row">
+          <div class="form-group">
+            <label>บทบาท:</label>
+            <select class="form-input" id="m-role">
+              <option value="student">นักเรียน</option>
+              <option value="teacher">ครูผู้สอน</option>
+            </select>
+          </div>
+          <div class="form-group">
+            <label>อาหาร:</label>
+            <select class="form-input" id="m-food">
+              <option value="normal">ทั่วไป</option>
+              <option value="halal">อิสลาม / ฮาลาล</option>
+              <option value="vegetarian">มังสวิรัติ</option>
+            </select>
+          </div>
+        </div>
+
+        <div class="form-group">
+          <label>โรงเรียน / สถานศึกษา:</label>
+          <input type="text" class="form-input" id="m-school" required>
+        </div>
+
+        <div class="form-group">
+          <label>ระดับชั้น / กลุ่มสาระการเรียนรู้:</label>
+          <input type="text" class="form-input" id="m-grade">
+        </div>
+
+        <div class="form-group">
+          <label>เบอร์โทรศัพท์ติดต่อ:</label>
+          <input type="tel" class="form-input" id="m-phone">
+        </div>
+
+        <div style="display: flex; justify-content: flex-end; gap: 0.75rem; margin-top: 1.5rem;">
+          <button type="button" class="btn-secondary" onclick="closeAddParticipantModal()">ยกเลิก</button>
+          <button type="submit" class="btn-cta">บันทึกข้อมูล</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- ==================== SITE FOOTER (Modeled on scirbru_praneet2026) ==================== -->
+  <footer class="site-footer" style="margin-top: auto;">
+    <div class="footer-inner">
+      
+      <!-- Column 1: Brand & Description -->
+      <div>
+        <div style="display: flex; align-items: center; gap: 0.75rem; margin-bottom: 1rem;">
+          <div style="font-size: 2.2rem; line-height: 1;">🌿</div>
+          <div>
+            <div style="font-weight: 800; font-size: 1.25rem; color: #ffffff; letter-spacing: 0.5px;">SciRBRU</div>
+            <div style="font-size: 0.72rem; font-weight: 700; color: #10b981; letter-spacing: 1.5px; text-transform: uppercase;">Agri-Tech Innovation</div>
+          </div>
+        </div>
+        <div class="footer-about-text">
+          <strong style="color: #f1f5f9; font-weight: 600;">ศูนย์พัฒนานวัตกรรมเกษตรดิจิทัลและปัญญาประดิษฐ์รำไพพรรณี (LEQs)</strong><br>
+          ระบบหลังบ้านสำหรับผู้บริหารและคณะทำงานโครงการอบรมเชิงปฏิบัติการ <em>"LEQs SciRBRU Digital Precision Farming & Deep AI"</em> คณะวิทยาศาสตร์และเทคโนโลยี มรภ.รำไพพรรณี
+        </div>
+      </div>
+
+      <!-- Column 2: Quick Links -->
+      <div>
+        <h4 class="footer-col-title"><span>เมนูระบบ</span></h4>
+        <ul class="footer-links-list">
+          <li class="footer-link-item"><a href="index.html"><span>🏠</span> หน้าหลักเว็บไซต์</a></li>
+          <li class="footer-link-item"><a href="javascript:void(0)" onclick="switchAdminTab('stats')"><span>📊</span> สถิติภาพรวม</a></li>
+          <li class="footer-link-item"><a href="javascript:void(0)" onclick="switchAdminTab('users')"><span>👥</span> รายชื่อผู้สมัคร</a></li>
+          <li class="footer-link-item"><a href="javascript:void(0)" onclick="switchAdminTab('cms')"><span>✍️</span> จัดการเนื้อหาเพจ</a></li>
+          <li class="footer-link-item"><a href="javascript:void(0)" onclick="switchAdminTab('quiz')"><span>📝</span> ผลคะแนนแบบทดสอบ</a></li>
+        </ul>
+      </div>
+
+      <!-- Column 3: Contact & Info -->
+      <div>
+        <h4 class="footer-col-title"><span>ช่องทางติดต่อ</span></h4>
+        <div style="display: flex; flex-direction: column; gap: 0.75rem; font-size: 0.86rem; line-height: 1.6;">
+          <div>
+            <strong style="color: #f1f5f9;">ผศ.ดร.ชีวะ ทัศนา</strong><br>
+            คณะวิทยาศาสตร์และเทคโนโลยี มรภ.รำไพพรรณี<br>
+            41 ม.5 ต.ท่าช้าง อ.เมือง จ.จันทบุรี 22000
+          </div>
+          <div>
+            <span style="color: #f1f5f9;">โทรศัพท์:</span> 039-319111 ต่อ 10600
+          </div>
+          <div>
+            <a href="https://chewa.rbru.ac.th" target="_blank" style="color: #38bdf8; text-decoration: underline;">chewa.rbru.ac.th</a>
+          </div>
+        </div>
+      </div>
+
+      <!-- Column 4: Admin Credentials Info -->
+      <div>
+        <h4 class="footer-col-title"><span>ความปลอดภัยของระบบ</span></h4>
+        <div style="background: rgba(15, 23, 42, 0.6); border: 1px solid var(--border-color); border-radius: 12px; padding: 1rem; font-size: 0.82rem; line-height: 1.6;">
+          <div style="color: #10b981; font-weight: 700; margin-bottom: 0.35rem;">🔐 Authentication Protocol</div>
+          <div style="color: var(--text-muted);">บัญชีผู้ดูแลระบบที่ได้รับการยืนยันตัวตน:</div>
+          <div style="font-family: var(--font-code); color: #f97316; margin-top: 0.25rem;">User: admin / Pass: LEQs</div>
+          <div style="font-size: 0.75rem; color: var(--text-dim); margin-top: 0.5rem;">
+            <i class="fas fa-database"></i> SQLite3 Engine: Active & Secured
+          </div>
+        </div>
+      </div>
+
+    </div>
+
+    <!-- Bottom sub-footer -->
+    <div class="footer-bottom-bar">
+      <div style="max-width: 1380px; margin: 0 auto; display: flex; flex-direction: column; justify-content: space-between; align-items: center; gap: 0.75rem;">
+        <div>
+          <p style="font-weight: 600; color: #cbd5e1; margin: 0;">© 2026 Young Digital Agri-Innovator Project. All rights reserved.</p>
+          <p style="font-size: 0.74rem; color: #64748b; margin: 0.2rem 0 0 0;">Faculty of Science and Technology, Rampai Phanni Rajabhat University.</p>
+        </div>
+        <div style="font-size: 0.74rem; color: #64748b;">
+          <i class="fas fa-users"></i> ผู้เข้าชมระบบ: <span id="portal-visitor-count">1</span> ครั้ง
+        </div>
+      </div>
+    </div>
+  </footer>
+
+  <script>
+    // ==========================================================
+    // Admin Management JavaScript
+    // ==========================================================
+    let allParticipants = [];
+
+    function togglePasswordVisibility() {
+      const pwInput = document.getElementById("login-password");
+      const icon = document.getElementById("toggle-pw-icon");
+      if (pwInput.type === "password") {
+        pwInput.type = "text";
+        icon.classList.remove("fa-eye");
+        icon.classList.add("fa-eye-slash");
+      } else {
+        pwInput.type = "password";
+        icon.classList.remove("fa-eye-slash");
+        icon.classList.add("fa-eye");
+      }
+    }
+
+    function checkAuth() {
+      const token = sessionStorage.getItem("admin_token");
+      if (token) {
+        document.getElementById("admin-login-view").style.display = "none";
+        document.getElementById("admin-app").style.display = "block";
+        loadDashboardData();
+      } else {
+        document.getElementById("admin-login-view").style.display = "flex";
+        document.getElementById("admin-app").style.display = "none";
+      }
+    }
+
+    async function handleAdminLogin(e) {
+      e.preventDefault();
+      const u = document.getElementById("login-username").value.trim();
+      const p = document.getElementById("login-password").value.trim();
+      const err = document.getElementById("login-error-msg");
+      const submitBtn = document.getElementById("btn-login-submit");
+
+      submitBtn.innerHTML = '<span>กำลังตรวจสอบ...</span> <i class="fas fa-spinner fa-spin"></i>';
+      submitBtn.disabled = true;
+
+      try {
+        const res = await fetch("/api/admin/login", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ username: u, password: p })
+        });
+        const data = await res.json();
+        if (data.success) {
+          sessionStorage.setItem("admin_token", data.token);
+          err.style.display = "none";
+          checkAuth();
+        } else {
+          err.style.display = "block";
+          err.textContent = data.error || "รหัสผ่านไม่ถูกต้อง (Default: admin / LEQs)";
+        }
+      } catch (e) {
+        err.style.display = "block";
+        err.textContent = "เชื่อมต่อระบบ Backend ไม่สำเร็จ กรุณาตรวจสอบว่าเซิร์ฟเวอร์รันอยู่";
+      } finally {
+        submitBtn.innerHTML = '<span>เข้าสู่ระบบ</span> <i class="fas fa-arrow-right"></i>';
+        submitBtn.disabled = false;
+      }
+    }
+
+    function handleAdminLogout() {
+      sessionStorage.removeItem("admin_token");
+      checkAuth();
+    }
+
+    function switchAdminTab(tabId) {
+      document.querySelectorAll("#admin-app .tab-pane").forEach(p => p.classList.remove("active"));
+      document.querySelectorAll(".admin-tab-btn").forEach(b => b.classList.remove("active"));
+
+      const targetPane = document.getElementById(`atab-${tabId}`);
+      const targetBtn = document.getElementById(`atab-btn-${tabId}`);
+      if (targetPane) targetPane.classList.add("active");
+      if (targetBtn) targetBtn.classList.add("active");
+    }
+
+    async function loadDashboardData() {
+      loadStats();
+      loadParticipants();
+      loadCmsContent();
+      loadQuizRecords();
+    }
+
+    async function loadStats() {
+      try {
+        const res = await fetch("/api/stats");
+        const d = await res.json();
+        if (d.success) {
+          document.getElementById("stat-total-val").textContent = `${d.total} / ${d.capacity}`;
+          document.getElementById("stat-teacher-val").textContent = d.teachers;
+          document.getElementById("stat-student-val").textContent = d.students;
+          document.getElementById("stat-school-val").textContent = d.schools;
+          document.getElementById("stat-checkin-val").textContent = d.checked_in;
+          document.getElementById("badge-total-count").textContent = d.total;
+
+          const pct = Math.min(100, Math.round((d.total / d.capacity) * 100));
+          document.getElementById("capacity-text").textContent = `${pct}% (${d.total}/${d.capacity} คน)`;
+          document.getElementById("capacity-bar").style.width = `${pct}%`;
+        }
+      } catch (e) {
+        console.error("Error loading stats:", e);
+      }
+    }
+
+    async function loadParticipants() {
+      try {
+        const res = await fetch("/api/participants");
+        const d = await res.json();
+        if (d.success) {
+          allParticipants = d.participants;
+          renderParticipantsTable(allParticipants);
+        }
+      } catch (e) {
+        console.error("Error loading participants:", e);
+      }
+    }
+
+    function renderParticipantsTable(list) {
+      const tbody = document.getElementById("participants-table-body");
+      if (!list || list.length === 0) {
+        tbody.innerHTML = '<tr><td colspan="9" style="text-align:center; padding:2rem; color:var(--text-dim);">ไม่พบข้อมูลผู้สมัคร</td></tr>';
+        return;
+      }
+
+      tbody.innerHTML = list.map(p => `
+        <tr>
+          <td><code style="color:var(--primary); font-weight:700;">${p.reg_code || '-'}</code></td>
+          <td><b>${p.prefix} ${p.fullname}</b></td>
+          <td>
+            <span class="${p.role === 'teacher' ? 'badge-role-teacher' : 'badge-role-student'}">
+              ${p.role === 'teacher' ? '👨‍🏫 ครู' : '🎓 นักเรียน'}
+            </span>
+          </td>
+          <td>${p.school}</td>
+          <td>${p.grade_dept || '-'}</td>
+          <td>${p.phone || '-'}</td>
+          <td><span style="font-size:0.8rem;">${p.food_pref === 'halal' ? 'ฮาลาล ☪️' : p.food_pref === 'vegetarian' ? 'มังสวิรัติ 🥗' : 'ทั่วไป 🍲'}</span></td>
+          <td>
+            <button class="btn-secondary" style="padding:0.25rem 0.65rem; font-size:0.75rem; border-color:${p.checked_in ? '#10b981' : 'var(--border-color)'}; color:${p.checked_in ? '#10b981' : 'var(--text-muted)'};" onclick="toggleCheckin(${p.id}, ${p.checked_in ? 0 : 1})">
+              ${p.checked_in ? '✅ เช็คอินแล้ว' : '⏳ รอเช็คอิน'}
+            </button>
+          </td>
+          <td>
+            <button onclick="handleDeleteParticipant(${p.id}, '${p.fullname}')" style="background:none; border:none; color:var(--danger); cursor:pointer; font-size:0.85rem;" title="ลบข้อมูล">
+              🗑️
+            </button>
+          </td>
+        </tr>
+      `).join("");
+    }
+
+    function filterParticipants() {
+      const query = document.getElementById("search-input").value.toLowerCase();
+      const role = document.getElementById("filter-role").value;
+      const checkin = document.getElementById("filter-checkin").value;
+
+      const filtered = allParticipants.filter(p => {
+        const matchQuery = !query || 
+          (p.fullname && p.fullname.toLowerCase().includes(query)) ||
+          (p.school && p.school.toLowerCase().includes(query)) ||
+          (p.reg_code && p.reg_code.toLowerCase().includes(query));
+        const matchRole = role === "all" || p.role === role;
+        const matchCheckin = checkin === "all" || String(p.checked_in) === checkin;
+        return matchQuery && matchRole && matchCheckin;
+      });
+
+      renderParticipantsTable(filtered);
+    }
+
+    async function toggleCheckin(id, nextState) {
+      try {
+        const res = await fetch("/api/admin/checkin", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ id, checked_in: nextState })
+        });
+        const d = await res.json();
+        if (d.success) {
+          loadDashboardData();
+        }
+      } catch (e) {
+        alert("ไม่สามารถอัปเดตสถานะเช็คอินได้");
+      }
+    }
+
+    async function handleDeleteParticipant(id, name) {
+      if (!confirm(`คุณต้องการลบรายชื่อ "${name}" ใช่หรือไม่?`)) return;
+      try {
+        const res = await fetch("/api/admin/delete-participant", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ id })
+        });
+        const d = await res.json();
+        if (d.success) {
+          loadDashboardData();
+        }
+      } catch (e) {
+        alert("ลบข้อมูลไม่สำเร็จ");
+      }
+    }
+
+    function exportParticipantsCsv() {
+      window.location.href = "/api/export-csv";
+    }
+
+    // CMS Content functions
+    async function loadCmsContent() {
+      try {
+        const res = await fetch("/api/content");
+        const d = await res.json();
+        if (d.success && d.content) {
+          if (document.getElementById("cms-announcement")) document.getElementById("cms-announcement").value = d.content.announcement || "";
+          if (document.getElementById("cms-hero-title")) document.getElementById("cms-hero-title").value = d.content.hero_title || "";
+          if (document.getElementById("cms-hero-subtitle")) document.getElementById("cms-hero-subtitle").value = d.content.hero_subtitle || "";
+          if (document.getElementById("cms-dates")) document.getElementById("cms-dates").value = d.content.workshop_dates || "";
+          if (document.getElementById("cms-location")) document.getElementById("cms-location").value = d.content.workshop_location || "";
+        }
+      } catch (e) {
+        console.error("Error loading CMS content:", e);
+      }
+    }
+
+    async function handleSaveCmsContent(e) {
+      e.preventDefault();
+      const content = {
+        announcement: document.getElementById("cms-announcement").value,
+        hero_title: document.getElementById("cms-hero-title").value,
+        hero_subtitle: document.getElementById("cms-hero-subtitle").value,
+        workshop_dates: document.getElementById("cms-dates").value,
+        workshop_location: document.getElementById("cms-location").value
+      };
+
+      try {
+        const res = await fetch("/api/admin/content", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ content })
+        });
+        const d = await res.json();
+        const msg = document.getElementById("cms-save-msg");
+        msg.style.display = "block";
+        msg.textContent = "✅ บันทึกเนื้อหาเว็บไซต์สำเร็จ! หน้าหลักจะแสดงข้อมูลใหม่ทันที";
+        setTimeout(() => { msg.style.display = "none"; }, 3000);
+      } catch (e) {
+        alert("บันทึกเนื้อหาไม่สำเร็จ");
+      }
+    }
+
+    async function loadQuizRecords() {
+      try {
+        const res = await fetch("/api/quiz-stats");
+        const d = await res.json();
+        const tbody = document.getElementById("quiz-records-table-body");
+        if (d.success && d.records && d.records.length > 0) {
+          tbody.innerHTML = d.records.map((r, i) => `
+            <tr>
+              <td>${i + 1}</td>
+              <td><b>${r.fullname}</b></td>
+              <td>${r.school}</td>
+              <td><span class="tag-badge">${r.quiz_type.toUpperCase()}</span></td>
+              <td><b style="color:var(--primary);">${r.score} / ${r.total_questions}</b></td>
+              <td><small style="color:var(--text-dim);">${r.created_at}</small></td>
+            </tr>
+          `).join("");
+        }
+      } catch (e) {
+        console.error("Error loading quiz records:", e);
+      }
+    }
+
+    // Modal controls
+    function openAddParticipantModal() {
+      document.getElementById("add-modal").style.display = "flex";
+    }
+    function closeAddParticipantModal() {
+      document.getElementById("add-modal").style.display = "none";
+    }
+
+    async function handleManualAdd(e) {
+      e.preventDefault();
+      const payload = {
+        prefix: document.getElementById("m-prefix").value,
+        fullname: document.getElementById("m-fullname").value,
+        role: document.getElementById("m-role").value,
+        school: document.getElementById("m-school").value,
+        grade_dept: document.getElementById("m-grade").value,
+        phone: document.getElementById("m-phone").value,
+        food_pref: document.getElementById("m-food").value
+      };
+
+      try {
+        const res = await fetch("/api/register", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify(payload)
+        });
+        const d = await res.json();
+        if (d.success) {
+          closeAddParticipantModal();
+          document.getElementById("manual-add-form").reset();
+          loadDashboardData();
+        } else {
+          alert(d.error || "เกิดข้อผิดพลาด");
+        }
+      } catch (e) {
+        alert("บันทึกไม่สำเร็จ");
+      }
+    }
+
+    // Visitor counter simulator
+    let count = parseInt(localStorage.getItem('portal_visits') || '128') + 1;
+    localStorage.setItem('portal_visits', count);
+    const visEl = document.getElementById('portal-visitor-count');
+    if (visEl) visEl.textContent = count.toLocaleString();
+
+    // Start
+    document.addEventListener("DOMContentLoaded", checkAuth);
+  </script>
+</body>
+</html>

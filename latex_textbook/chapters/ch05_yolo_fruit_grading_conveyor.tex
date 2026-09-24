@@ -1,0 +1,146 @@
+\chapter{ปัญญาประดิษฐ์ตรวจจับรอยโรคและระบบคัดเกรดผลไม้อัตโนมัติบนสายพาน}
+\label{chap:ch05}
+
+\section*{แผนบริหารการสอนประจำบทที่ 5}
+\addcontentsline{toc}{section}{แผนบริหารการสอนประจำบทที่ 5}
+
+\begin{planbox}{หัวข้อเนื้อหาประจำบท}
+\begin{enumerate}[topsep=2pt, itemsep=1pt, partopsep=0pt, parsep=0pt, leftmargin=1.5em]
+    \item สถาปัตยกรรมโครงข่ายประสาทเทียมตรวจจับวัตถุ YOLOv8 และ YOLOv11
+    \item การเตรียมชุดข้อมูลภาพถ่ายและเทคนิคการติดป้ายระบุพิกัดบนแพลตฟอร์ม Roboflow\index{แพลตฟอร์มโรโบโฟลว์ (Roboflow)}\index{Roboflow}
+    \item การฝึกสอนโมเดลปัญญาประดิษฐ์ตรวจวินิจฉัยโรคผลเน่าและรากเน่าโคนเน่าทุเรียน
+    \item ระบบคอมพิวเตอร์บอร์ดเดี่ยวประมวลผลที่ขอบ Raspberry Pi 5 และ NVIDIA Jetson
+    \item การซิงโครไนซ์ตำแหน่งสายพานลำเลียงและการสั่งการกระบอกสูบลมคัดแยกผลผลิตแบบเรียลไทม์
+\end{enumerate}
+\end{planbox}
+
+\begin{planbox}{วัตถุประสงค์เชิงพฤติกรรม}
+\begin{enumerate}[topsep=2pt, itemsep=1pt, partopsep=0pt, parsep=0pt, leftmargin=1.5em]
+    \item อธิบายความแตกต่างระหว่าง Image Classification กับ Object Detection ได้อย่างชัดเจน
+    \item ปฏิบัติการติดป้ายกรอบวัตถุและทำ Data Augmentation บน Roboflow ได้อย่างถูกต้อง
+    \item วิเคราะห์ค่าดัชนีชี้วัดสมรรถนะโมเดล Precision, Recall, และ mAP@0.5 ได้อย่างแม่นยำ
+    \item คำนวณเวลาหน่วงเพื่อสั่งยิงก้านสูบลมคัดเกรดผลผลิตตามความเร็วสายพานได้อย่างสมบูรณ์
+\end{enumerate}
+\end{planbox}
+
+\newpage
+
+\begin{planbox}{วิธีสอนและกิจกรรมการเรียนการสอน}
+\begin{enumerate}[topsep=2pt, itemsep=1pt, partopsep=0pt, parsep=0pt, leftmargin=1.5em]
+    \item บรรยายหลักการโครงข่ายคอนโวลูชันและการตรวจจับวัตถุแบบขั้นตอนเดียว (One-Stage Detection)
+    \item สาธิตการสร้างโปรเจกต์และการนำเข้าภาพถ่ายผลไม้บนแพลตฟอร์ม Roboflow
+    \item ปฏิบัติการส่งออกชุดข้อมูลและฝึกสอนโมเดลบน Google Colab GPU
+    \item นำโมเดลที่ฝึกสอนเสร็จสิ้นไปแปลงเป็น ONNX/TensorRT เพื่อรันจริงบนคอมพิวเตอร์บอร์ดเดี่ยว
+\end{enumerate}
+\end{planbox}
+
+\begin{planbox}{สื่อการเรียนการสอน}
+\begin{enumerate}[topsep=2pt, itemsep=1pt, partopsep=0pt, parsep=0pt, leftmargin=1.5em]
+    \item เอกสารคำสอนบทที่ 5 สไลด์บรรยาย และชุดข้อมูลภาพถ่ายโรคทุเรียน
+    \item บัญชีผู้ใช้งานระบบ Cloud GPU และแพลตฟอร์ม Roboflow
+    \item บอร์ด Raspberry Pi 5 พร้อมกล้องดิจิทัลความเร็วสูง Global Shutter
+    \item โมเดลจำลองสายพานลำเลียงขนาดเล็กพร้อมมอเตอร์ขับและโซลินอยด์วาล์วลม
+\end{enumerate}
+\end{planbox}
+
+\begin{planbox}{การวัดและประเมินผล}
+\begin{enumerate}[topsep=2pt, itemsep=1pt, partopsep=0pt, parsep=0pt, leftmargin=1.5em]
+    \item การทดสอบความเข้าใจทฤษฎี YOLO Loss Function และ Non-Maximum Suppression
+    \item การประเมินคุณภาพของชุดข้อมูลภาพถ่ายและความสมบูรณ์ของการติดป้ายข้อมูล
+    \item การทดสอบสมรรถนะการตรวจจับวัตถุและความเร็วเฟรมเรตจริง (FPS) บนอุปกรณ์เอดจ์
+\end{enumerate}
+\end{planbox}
+
+\clearpage
+
+\section{สถาปัตยกรรมโครงข่ายประสาทเทียมตรวจจับวัตถุ}
+
+ในโรงงานคัดแยกและบรรจุผลไม้ส่งออก (ล้งทุเรียน) ผลไม้จะไหลผ่านสายพานลำเลียงอย่างต่อเนื่องด้วยความเร็ว $0.3 - 0.6\text{ m/s}$ การจำแนกภาพแบบดั้งเดิม (Image Classification) สามารถบอกได้เพียงผลลัพธ์ภาพรวมทั้งภาพ แต่ไม่สามารถระบุพิกัดตำแหน่งของผลไม้แต่ละผลบนสายพานได้
+
+เทคโนโลยี \textbf{การตรวจจับวัตถุ (Object Detection)\index{การตรวจจับวัตถุ (Object Detection)}\index{Object Detection (YOLO)}} โดยเฉพาะตระกูล \textbf{YOLO (You Only Look Once)} สามารถตีกรอบล้อมรอบวัตถุ (Bounding Box) ระบุพิกัดตำแหน่ง $(x, y, w, h)$ และจำแนกประเภท (Class) ของผลผลิตหลายผลในเฟรมเดียวกันได้แบบเรียลไทม์
+
+\begin{table}[H]
+\centering
+\caption{การเปรียบเทียบสมรรถนะโมเดล YOLO รุ่นต่างๆ สำหรับงานคัดแยกผลไม้บนอุปกรณ์เอดจ์}
+\label{tab:yolo_comparison}
+\begin{tabularx}{\textwidth}{p{3.2cm}YYYY}
+    \toprule
+    \textbf{โมเดล} & \textbf{พารามิเตอร์ (ล้านตัว)} & \textbf{mAP@0.5:0.95 (\%)} & \textbf{Latency บน RPi5 (ms)} & \textbf{เฟรมเรตจริง (FPS)} \\
+    \midrule
+    YOLOv8n (Nano) & 3.2 & 37.3 & 42.5 & 23.5 \\
+    YOLOv8s (Small) & 11.2 & 44.9 & 115.0 & 8.7 \\
+    YOLOv11n (Nano) & 2.6 & 39.5 & 36.2 & 27.6 \\
+    YOLOv11s (Small) & 9.4 & 47.0 & 98.4 & 10.2 \\
+    \bottomrule
+\end{tabularx}
+\end{table}
+
+\section{การเตรียมชุดข้อมูลและการติดป้ายกำกับบน Roboflow}
+
+ความสำเร็จของการฝึกสอนโมเดลปัญญาประดิษฐ์ขึ้นอยู่กับคุณภาพของชุดข้อมูลเป็นสำคัญ \textbf{แพลตฟอร์ม Roboflow} ช่วยให้กระบวนการเตรียมข้อมูล (Dataset Pipeline) เป็นไปอย่างรวดเร็วและเป็นมาตรฐานสากล
+
+\subsection{กฎเกณฑ์การถ่ายภาพและข้อปฏิบัติในการตั้งชื่อกลุ่ม}
+
+เพื่อให้โมเดลมีความทนทาน (Robustness) ต่อสภาพแวดล้อมจริงในโรงคัดบรรจุ ต้องปฏิบัติตามหลักเกณฑ์ดังนี้
+\begin{enumerate}[leftmargin=1.5em]
+    \item \textbf{คละมุมมองและสภาพแสง:} ต้องถ่ายภาพผลไม้จากหลายมุม (ด้านบน ด้านข้าง มุมเฉียง) และคละช่วงเวลา (แสงธรรมชาติเช้า-บ่าย และใต้หลอดไฟฟลูออเรสเซนต์/LED)
+    \item \textbf{ถ่ายบนสายพานจริง:} หลีกเลี่ยงการถ่ายในสตูดิโอฉากหลังขาวล้วน เพื่อป้องกันการเกิด Overfitting กับฉากหลัง
+    \item \textbf{จำนวนภาพขั้นต่ำ:} ควรถ่ายภาพอย่างน้อย \textbf{20 ถึง 30 ภาพต่อ 1 Class} ก่อนทำการขยายภาพด้วย Data Augmentation
+    \item \textbf{การตั้งชื่อ Class:} ต้องใช้คำภาษาอังกฤษตัวพิมพ์เล็ก กระชับ และสะกดเหมือนกันทุกรูป เช่น \texttt{grade\_a}, \texttt{grade\_b}, \texttt{cull}, \texttt{phytophthora}
+\end{enumerate}
+
+\section{การตรวจวินิจฉัยโรคผลเน่าและรากเน่าโคนเน่าทุเรียน}
+
+เชื้อรา \textit{Phytophthora palmivora}\index{โรครากเน่าโคนเน่าทุเรียน (Phytophthora palmivora)}\index{Phytophthora palmivora} เป็นสาเหตุสำคัญของโรครากเน่าโคนเน่าและโรคผลเน่าในทุเรียน รอยโรคบนผลจะมีลักษณะเป็นแผลสีน้ำตาลไหม้ฉ่ำน้ำ ขอบแผลไม่เรียบ และมีเส้นใยสีขาวฟูขึ้นปกคลุมเมื่อมีความชื้นสูง
+
+โมเดล YOLO จะถูกฝึกสอนให้ตรวจหารอยแผลขนาดเล็กตั้งแต่ระยะเริ่มแรก หากตรวจพบรอยแผล ระบบจะจัดเกรดผลไม้นั้นเป็นผลตกเกรด (Cull) ทันที เพื่อป้องกันการแพร่กระจายของสปอร์เชื้อราไปยังผลอื่นในตู้คอนเทนเนอร์ควบคุมอุณหภูมิระหว่างการขนส่งทางเรือ
+
+\begin{pythonbox}[การอนุมานโมเดล YOLOv8 ตรวจจับรอยโรคทุเรียนด้วย Python]
+from ultralytics import YOLO
+import cv2
+
+# โหลดโมเดลที่ผ่านการเทรนและส่งออกในฟอร์แมต ONNX สำหรับเอดจ์
+model = YOLO("durian_disease_yolov8n.onnx")
+
+def detect_fruit_disease(frame):
+    results = model(frame, conf=0.5, iou=0.45)
+    detections = []
+    
+    for r in results:
+        boxes = r.boxes
+        for box in boxes:
+            cls_id = int(box.cls[0])
+            label_name = model.names[cls_id]
+            confidence = float(box.conf[0])
+            xyxy = box.xyxy[0].tolist()
+            
+            detections.append({
+                "class": label_name,
+                "conf": confidence,
+                "bbox": xyxy
+            })
+            
+    return detections
+\end{pythonbox}
+
+\section{การซิงโครไนซ์ตำแหน่งสายพานและการสั่งการก้านสูบลม}
+
+เมื่อกล้องที่ติดตั้งเหนือสายพานตรวจจับพบผลไม้ที่ต้องคัดแยก (เช่น ทุเรียนตกเกรดหรือผลเป็นโรค) บอร์ดประมวลผลเอดจ์ต้องคำนวณตำแหน่งและเวลาที่ผลไม้จะเคลื่อนที่ไปถึงจุดติดตั้งของ \textbf{กระบอกสูบลมคัดแยก (Pneumatic Ejector)}
+
+\begin{equation}
+t_{\text{delay}} = \frac{L_{\text{distance}}}{v_{\text{belt}}} - t_{\text{actuator}}
+\label{eq:conveyor_delay}
+\end{equation}
+
+โดยที่ $L_{\text{distance}}$ แทนระยะห่างระหว่างจุดตรวจจับของกล้องกับแนวก้านสูบลม (เมตร), $v_{\text{belt}}$ แทนความเร็วเชิงเส้นของสายพานลำเลียง (เมตรต่อวินาที) ซึ่งวัดได้จากโรตารีเอนโค้ดเดอร์ (Rotary Encoder), และ $t_{\text{actuator}}$ แทนเวลาการตอบสนองทางกลของวาล์วลม (ประมาณ $30 - 50\text{ ms}$)
+
+\section*{คำถามทบทวนท้ายบทที่ 5}
+\addcontentsline{toc}{section}{คำถามทบทวนท้ายบทที่ 5}
+
+\begin{enumerate}
+    \item จงอธิบายโครงสร้างสถาปัตยกรรมของโมเดล YOLO และวิเคราะห์ข้อดีของการตรวจจับวัตถุแบบ One-Stage เทียบกับ Two-Stage เช่น Faster R-CNN
+    \item หากต้องการเทรนโมเดล AI ให้รู้จักตรวจจับโรคผลเน่าทุเรียน เหตุใดจึงไม่ควรใช้ภาพถ่ายจากสตูดิโอฉากหลังขาวเพียงอย่างเดียว
+    \item ในระบบสายพานลำเลียงที่มีความเร็ว $0.4\text{ m/s}$ ระยะห่างจากกล้องถึงก้านสูบลมเท่ากับ $1.2\text{ เมตร}$ และก้านสูบลมมีเวลาตอบสนอง $40\text{ ms}$ จงคำนวณหาเวลาหน่วง ($t_{\text{delay}}$) ในการสั่งยิงลม
+    \item ค่าดัชนีชี้วัด mAP@0.5 และ mAP@0.5:0.95 สื่อความหมายถึงอะไร และเหตุใดจึงใช้ประเมินความแม่นยำของโมเดลตรวจจับวัตถุ
+\end{enumerate}
+\clearpage

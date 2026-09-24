@@ -1,0 +1,419 @@
+#!/usr/bin/env python3
+"""
+LEQs SciRBRU Digital Precision Farming & Deep AI
+Workshop Management System Backend (SQLite3 + REST API + Static Files Server)
+No external dependencies required (Standard Library only)
+"""
+
+import http.server
+import socketserver
+import json
+import sqlite3
+import os
+import sys
+import urllib.parse
+from datetime import datetime
+
+PORT = 8090
+DB_FILE = os.path.join(os.path.dirname(os.path.abspath(__file__)), "database.db")
+STATIC_DIR = os.path.dirname(os.path.abspath(__file__))
+
+def init_db():
+    conn = sqlite3.connect(DB_FILE)
+    c = conn.cursor()
+    
+    # 1. Participants table
+    c.execute("""
+    CREATE TABLE IF NOT EXISTS participants (
+        id INTEGER PRIMARY KEY AUTOINCREMENT,
+        reg_code TEXT UNIQUE,
+        prefix TEXT,
+        fullname TEXT NOT NULL,
+        role TEXT NOT NULL, -- 'teacher' or 'student'
+        school TEXT NOT NULL,
+        grade_dept TEXT,
+        phone TEXT,
+        email TEXT,
+        food_pref TEXT DEFAULT 'normal', -- 'normal', 'halal', 'vegetarian', 'allergies'
+        status TEXT DEFAULT 'confirmed', -- 'pending', 'confirmed', 'attended', 'cancelled'
+        checked_in INTEGER DEFAULT 0,
+        created_at TEXT
+    )
+    """)
+
+    # 2. Site Content & CMS Settings table
+    c.execute("""
+    CREATE TABLE IF NOT EXISTS site_content (
+        key TEXT PRIMARY KEY,
+        value TEXT,
+        updated_at TEXT
+    )
+    """)
+
+    # 3. Quiz & Assessment Records table
+    c.execute("""
+    CREATE TABLE IF NOT EXISTS quiz_records (
+        id INTEGER PRIMARY KEY AUTOINCREMENT,
+        fullname TEXT,
+        school TEXT,
+        quiz_type TEXT, -- 'pretest' or 'posttest'
+        score INTEGER,
+        total_questions INTEGER,
+        created_at TEXT
+    )
+    """)
+
+    # 4. Admin Credentials table
+    c.execute("""
+    CREATE TABLE IF NOT EXISTS admin_users (
+        username TEXT PRIMARY KEY,
+        password TEXT
+    )
+    """)
+
+    # Seed or update admin password to LEQs
+    c.execute("INSERT OR REPLACE INTO admin_users (username, password) VALUES (?, ?)", ("admin", "LEQs"))
+
+    # Seed default initial content if empty
+    default_content = {
+        "hero_title": "สร้าง ยุวนวัตกรเกษตรแม่นยำ ด้วย\nAIoT & Deep Learning Edge Intelligence",
+        "hero_subtitle": "เปิดโลกการเรียนรู้ด้านวิทยาศาสตร์และเทคโนโลยีการเกษตรยุคใหม่สำหรับคุณครูและนักเรียน ลงมือประกอบชุดทดลอง Smart Farm Kit จริง เขียนโค้ดไมโครคอนโทรลเลอร์ ESP32 เชื่อมต่อเซนเซอร์ดินและอากาศ ส่งข้อมูลขึ้นคลาวด์ พร้อมประยุกต์ใช้โครงข่ายประสาทเทียม (Deep Learning) พยากรณ์และรดน้ำอัตโนมัติ",
+        "announcement": "📢 เปิดรับสมัครครูและนักเรียนที่สนใจเข้าร่วมโครงการอบรมเชิงปฏิบัติการ วันที่ 25-26 ธันวาคม 2568 ณ คณะวิทยาศาสตร์และเทคโนโลยี มรภ.รำไพพรรณี รับจำนวนจำกัด 60 ที่นั่ง ฟรีไม่มีค่าใช้จ่าย!",
+        "workshop_dates": "25 - 26 ธันวาคม 2568",
+        "workshop_location": "ห้องปฏิบัติการฟิสิกส์เกษตรดิจิทัล คณะวิทยาศาสตร์และเทคโนโลยี มรภ.รำไพพรรณี"
+    }
+
+    for k, v in default_content.items():
+        c.execute("INSERT OR IGNORE INTO site_content VALUES (?, ?, ?)", (k, v, datetime.now().isoformat()))
+
+    # Seed initial sample participants for demonstration
+    c.execute("SELECT COUNT(*) FROM participants")
+    if c.fetchone()[0] == 0:
+        samples = [
+            ("REG-2026-001", "นาย", "สมชาย ชำนาญคิด", "teacher", "โรงเรียนเบญจมราชูทิศ จันทบุรี", "กลุ่มสาระฯ วิทยาศาสตร์และเทคโนโลยี", "081-234-5678", "somchai@benchama.ac.th", "normal", "confirmed", 1),
+            ("REG-2026-002", "นางสาว", "กัญญา พรหมมินทร์", "student", "โรงเรียนเบญจมราชูทิศ จันทบุรี", "มัธยมศึกษาปีที่ 4/1", "089-987-6543", "kanya@gmail.com", "normal", "confirmed", 1),
+            ("REG-2026-003", "นาย", "ธนพล นวัตกร", "student", "โรงเรียนศรียานุสรณ์ จันทบุรี", "มัธยมศึกษาปีที่ 5/2", "086-555-4321", "thanapol@gmail.com", "halal", "confirmed", 0),
+            ("REG-2026-004", "นาง", "วรรณา สดใส", "teacher", "โรงเรียนท่าใหม่ 'พูลสวัสดิ์ราษฎร์นุกูล'", "กลุ่มสาระฯ การงานอาชีพ", "084-111-2233", "wanna@thamai.ac.th", "vegetarian", "confirmed", 0),
+            ("REG-2026-005", "เด็กชาย", "ปกรณ์ เกษตรมั่นคง", "student", "โรงเรียนชุมชนวัดแสนตุ้ง", "มัธยมศึกษาปีที่ 3", "082-333-4455", "pakorn@gmail.com", "normal", "confirmed", 0),
+        ]
+        for s in samples:
+            c.execute("""
+            INSERT INTO participants 
+            (reg_code, prefix, fullname, role, school, grade_dept, phone, email, food_pref, status, checked_in, created_at)
+            VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+            """, (*s, datetime.now().isoformat()))
+
+    conn.commit()
+    conn.close()
+    print("✅ Database initialized successfully at:", DB_FILE)
+
+class WorkshopHandler(http.server.SimpleHTTPRequestHandler):
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, directory=STATIC_DIR, **kwargs)
+
+    def _send_json(self, data, status=200):
+        self.send_response(status)
+        self.send_header("Content-Type", "application/json; charset=utf-8")
+        self.send_header("Access-Control-Allow-Origin", "*")
+        self.send_header("Access-Control-Allow-Methods", "GET, POST, PUT, DELETE, OPTIONS")
+        self.send_header("Access-Control-Allow-Headers", "Content-Type, Authorization")
+        self.end_headers()
+        self.wfile.write(json.dumps(data, ensure_ascii=False).encode("utf-8"))
+
+    def do_OPTIONS(self):
+        self.send_response(200)
+        self.send_header("Access-Control-Allow-Origin", "*")
+        self.send_header("Access-Control-Allow-Methods", "GET, POST, PUT, DELETE, OPTIONS")
+        self.send_header("Access-Control-Allow-Headers", "Content-Type, Authorization")
+        self.end_headers()
+
+    def do_GET(self):
+        parsed = urllib.parse.urlparse(self.path)
+        path = parsed.path
+
+        # API Routes
+        if path == "/api/participants":
+            self.handle_get_participants()
+        elif path == "/api/stats":
+            self.handle_get_stats()
+        elif path == "/api/content":
+            self.handle_get_content()
+        elif path == "/api/quiz-stats":
+            self.handle_get_quiz_stats()
+        elif path == "/api/export-csv":
+            self.handle_export_csv()
+        else:
+            # Fallback to serving static files
+            super().do_GET()
+
+    def do_POST(self):
+        parsed = urllib.parse.urlparse(self.path)
+        path = parsed.path
+
+        # Read JSON body
+        content_length = int(self.headers.get("Content-Length", 0))
+        body = {}
+        if content_length > 0:
+            try:
+                raw_data = self.rfile.read(content_length).decode("utf-8")
+                body = json.loads(raw_data)
+            except Exception as e:
+                self._send_json({"success": False, "error": f"Invalid JSON: {str(e)}"}, 400)
+                return
+
+        # API Handlers
+        if path == "/api/register":
+            self.handle_register(body)
+        elif path == "/api/admin/login":
+            self.handle_admin_login(body)
+        elif path == "/api/admin/checkin":
+            self.handle_admin_checkin(body)
+        elif path == "/api/admin/status":
+            self.handle_admin_update_status(body)
+        elif path == "/api/admin/delete-participant":
+            self.handle_admin_delete_participant(body)
+        elif path == "/api/admin/content":
+            self.handle_admin_save_content(body)
+        elif path == "/api/quiz":
+            self.handle_save_quiz(body)
+        else:
+            self._send_json({"success": False, "error": "Endpoint not found"}, 404)
+
+    # -------------------------------------------------------------
+    # API Implementations
+    # -------------------------------------------------------------
+    def handle_get_participants(self):
+        conn = sqlite3.connect(DB_FILE)
+        conn.row_factory = sqlite3.Row
+        c = conn.cursor()
+        c.execute("SELECT * FROM participants ORDER BY id DESC")
+        rows = [dict(r) for r in c.fetchall()]
+        conn.close()
+        self._send_json({"success": True, "count": len(rows), "participants": rows})
+
+    def handle_get_stats(self):
+        conn = sqlite3.connect(DB_FILE)
+        c = conn.cursor()
+        
+        c.execute("SELECT COUNT(*) FROM participants")
+        total = c.fetchone()[0]
+
+        c.execute("SELECT COUNT(*) FROM participants WHERE role = 'teacher'")
+        teachers = c.fetchone()[0]
+
+        c.execute("SELECT COUNT(*) FROM participants WHERE role = 'student'")
+        students = c.fetchone()[0]
+
+        c.execute("SELECT COUNT(DISTINCT school) FROM participants")
+        schools = c.fetchone()[0]
+
+        c.execute("SELECT COUNT(*) FROM participants WHERE checked_in = 1")
+        checked_in = c.fetchone()[0]
+
+        c.execute("SELECT AVG(score) FROM quiz_records WHERE quiz_type = 'pretest'")
+        avg_pre = c.fetchone()[0] or 0.0
+
+        c.execute("SELECT AVG(score) FROM quiz_records WHERE quiz_type = 'posttest'")
+        avg_post = c.fetchone()[0] or 0.0
+
+        conn.close()
+        self._send_json({
+            "success": True,
+            "total": total,
+            "teachers": teachers,
+            "students": students,
+            "schools": schools,
+            "checked_in": checked_in,
+            "capacity": 60,
+            "avg_pretest": round(avg_pre, 1),
+            "avg_posttest": round(avg_post, 1)
+        })
+
+    def handle_get_content(self):
+        conn = sqlite3.connect(DB_FILE)
+        c = conn.cursor()
+        c.execute("SELECT key, value FROM site_content")
+        items = dict(c.fetchall())
+        conn.close()
+        self._send_json({"success": True, "content": items})
+
+    def handle_register(self, body):
+        prefix = body.get("prefix", "").strip()
+        fullname = body.get("fullname", "").strip()
+        role = body.get("role", "student").strip()
+        school = body.get("school", "").strip()
+        grade_dept = body.get("grade_dept", "").strip()
+        phone = body.get("phone", "").strip()
+        email = body.get("email", "").strip()
+        food_pref = body.get("food_pref", "normal").strip()
+
+        if not fullname or not school:
+            self._send_json({"success": False, "error": "กรุณากรอกชื่อ-นามสกุล และโรงเรียนให้ครบถ้วน"}, 400)
+            return
+
+        conn = sqlite3.connect(DB_FILE)
+        c = conn.cursor()
+
+        # Check total capacity
+        c.execute("SELECT COUNT(*) FROM participants")
+        count = c.fetchone()[0]
+        if count >= 60:
+            conn.close()
+            self._send_json({"success": False, "error": "ขออภัย ที่นั่งเข้าร่วมอบรมเต็มจำนวน 60 ท่านแล้ว"}, 400)
+            return
+
+        # Generate unique registration code: REG-2026-XXX
+        reg_code = f"REG-2026-{count + 1:03d}"
+        now = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
+
+        c.execute("""
+        INSERT INTO participants 
+        (reg_code, prefix, fullname, role, school, grade_dept, phone, email, food_pref, status, checked_in, created_at)
+        VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, 0, ?)
+        """, (reg_code, prefix, fullname, role, school, grade_dept, phone, email, food_pref, "confirmed", now))
+        
+        participant_id = c.lastrowid
+        conn.commit()
+        conn.close()
+
+        self._send_json({
+            "success": True,
+            "message": "ลงทะเบียนสำเร็จ!",
+            "reg_code": reg_code,
+            "id": participant_id,
+            "fullname": f"{prefix} {fullname}".strip(),
+            "role": role,
+            "school": school,
+            "created_at": now
+        })
+
+    def handle_admin_login(self, body):
+        username = body.get("username", "").strip()
+        password = body.get("password", "").strip()
+
+        conn = sqlite3.connect(DB_FILE)
+        c = conn.cursor()
+        c.execute("SELECT password FROM admin_users WHERE username = ?", (username,))
+        row = c.fetchone()
+        conn.close()
+
+        if row and row[0] == password:
+            self._send_json({"success": True, "token": f"token_{username}_valid", "user": username})
+        else:
+            self._send_json({"success": False, "error": "ชื่อผู้ใช้หรือรหัสผ่านไม่ถูกต้อง"}, 401)
+
+    def handle_admin_checkin(self, body):
+        p_id = body.get("id")
+        checked = body.get("checked_in", 1)
+
+        conn = sqlite3.connect(DB_FILE)
+        c = conn.cursor()
+        c.execute("UPDATE participants SET checked_in = ? WHERE id = ?", (checked, p_id))
+        conn.commit()
+        conn.close()
+
+        self._send_json({"success": True, "id": p_id, "checked_in": checked})
+
+    def handle_admin_update_status(self, body):
+        p_id = body.get("id")
+        status = body.get("status", "confirmed")
+
+        conn = sqlite3.connect(DB_FILE)
+        c = conn.cursor()
+        c.execute("UPDATE participants SET status = ? WHERE id = ?", (status, p_id))
+        conn.commit()
+        conn.close()
+
+        self._send_json({"success": True, "id": p_id, "status": status})
+
+    def handle_admin_delete_participant(self, body):
+        p_id = body.get("id")
+
+        conn = sqlite3.connect(DB_FILE)
+        c = conn.cursor()
+        c.execute("DELETE FROM participants WHERE id = ?", (p_id,))
+        conn.commit()
+        conn.close()
+
+        self._send_json({"success": True, "deleted_id": p_id})
+
+    def handle_admin_save_content(self, body):
+        items = body.get("content", {})
+        conn = sqlite3.connect(DB_FILE)
+        c = conn.cursor()
+        now = datetime.now().isoformat()
+
+        for k, v in items.items():
+            c.execute("""
+            INSERT INTO site_content (key, value, updated_at) 
+            VALUES (?, ?, ?) 
+            ON CONFLICT(key) DO UPDATE SET value = excluded.value, updated_at = excluded.updated_at
+            """, (k, v, now))
+
+        conn.commit()
+        conn.close()
+        self._send_json({"success": True, "message": "อัปเดตเนื้อหาเว็บไซต์เรียบร้อยแล้ว"})
+
+    def handle_save_quiz(self, body):
+        fullname = body.get("fullname", "ไม่ระบุชื่อ").strip()
+        school = body.get("school", "ไม่ระบุโรงเรียน").strip()
+        quiz_type = body.get("quiz_type", "pretest")
+        score = int(body.get("score", 0))
+        total = int(body.get("total", 5))
+
+        conn = sqlite3.connect(DB_FILE)
+        c = conn.cursor()
+        now = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
+
+        c.execute("""
+        INSERT INTO quiz_records (fullname, school, quiz_type, score, total_questions, created_at)
+        VALUES (?, ?, ?, ?, ?, ?)
+        """, (fullname, school, quiz_type, score, total, now))
+
+        conn.commit()
+        conn.close()
+        self._send_json({"success": True, "score": score, "total": total})
+
+    def handle_get_quiz_stats(self):
+        conn = sqlite3.connect(DB_FILE)
+        conn.row_factory = sqlite3.Row
+        c = conn.cursor()
+        c.execute("SELECT * FROM quiz_records ORDER BY id DESC LIMIT 50")
+        rows = [dict(r) for r in c.fetchall()]
+        conn.close()
+        self._send_json({"success": True, "records": rows})
+
+    def handle_export_csv(self):
+        conn = sqlite3.connect(DB_FILE)
+        c = conn.cursor()
+        c.execute("SELECT reg_code, prefix, fullname, role, school, grade_dept, phone, email, food_pref, checked_in, created_at FROM participants ORDER BY id ASC")
+        rows = c.fetchall()
+        conn.close()
+
+        csv_lines = ["รหัสลงทะเบียน,คำนำหน้า,ชื่อ-นามสกุล,สถานะ,โรงเรียน,ระดับชั้น/กลุ่มสาระ,เบอร์โทร,อีเมล,อาหาร,เช็คอินวันงาน,วันที่ลงทะเบียน\n"]
+        for r in rows:
+            role_th = "ครู" if r[3] == "teacher" else "นักเรียน"
+            check_th = "เช็คอินแล้ว" if r[9] == 1 else "ยังไม่เช็คอิน"
+            clean_cols = [f'"{str(col)}"' for col in [r[0], r[1], r[2], role_th, r[4], r[5], r[6], r[7], r[8], check_th, r[10]]]
+            csv_lines.append(",".join(clean_cols) + "\n")
+
+        csv_content = "".join(csv_lines).encode("utf-8-sig") # BOM for Excel Thai support
+        self.send_response(200)
+        self.send_header("Content-Type", "text/csv; charset=utf-8")
+        self.send_header("Content-Disposition", 'attachment; filename="scirbru_aiot_participants.csv"')
+        self.send_header("Content-Length", str(len(csv_content)))
+        self.end_headers()
+        self.wfile.write(csv_content)
+
+def main():
+    init_db()
+    with socketserver.TCPServer(("", PORT), WorkshopHandler) as httpd:
+        print(f"🚀 LEQs SciRBRU Workshop Management Backend running at http://localhost:{PORT}/")
+        print(f"📁 Serving static files from: {STATIC_DIR}")
+        try:
+            httpd.serve_forever()
+        except KeyboardInterrupt:
+            print("\nShutting down server...")
+
+if __name__ == "__main__":
+    main()
