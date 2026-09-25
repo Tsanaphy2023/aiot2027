@@ -1735,4 +1735,350 @@ input:checked + .toggle-slider:before {
   }
 }
 
+/* ==========================================================================
+   3D Pixar / Studio Ghibli Visual System (Modeled after AI4Student_Project2026)
+   ========================================================================== */
+
+/* Navbar Avatar Logo with Rotation Morph */
+.navbar-logo-avatar {
+  width: 44px;
+  height: 44px;
+  object-fit: cover;
+  border-radius: 50%;
+  border: 2px solid rgba(56, 189, 248, 0.7);
+  box-shadow: 0 0 15px rgba(56, 189, 248, 0.45);
+  transition: all 0.5s cubic-bezier(0.34, 1.56, 0.64, 1);
+  background: rgba(15, 23, 42, 0.8);
+  flex-shrink: 0;
+}
+
+.navbar-logo-avatar:hover {
+  transform: scale(1.15) rotate(10deg);
+  box-shadow: 0 0 25px rgba(16, 185, 129, 0.7);
+  border-color: #10b981;
+}
+
+/* 3D Pixar Image Cards & Glow */
+.hero-pixar-stage {
+  position: relative;
+  border-radius: 2rem;
+  overflow: hidden;
+  box-shadow: 0 20px 50px rgba(0, 0, 0, 0.5);
+  border: 3px solid rgba(255, 255, 255, 0.18);
+  background: linear-gradient(135deg, rgba(15, 23, 42, 0.9) 0%, rgba(30, 41, 59, 0.7) 100%);
+}
+
+.hero-pixar-img {
+  width: 100%;
+  height: 330px;
+  object-fit: cover;
+  display: block;
+  transition: all 0.6s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.hero-pixar-stage:hover .hero-pixar-img {
+  transform: scale(1.04);
+}
+
+.hero-img-overlay-badge {
+  position: absolute;
+  bottom: 1rem;
+  left: 1rem;
+  right: 1rem;
+  background: rgba(15, 23, 42, 0.85);
+  backdrop-filter: blur(12px);
+  border: 1px solid rgba(255, 255, 255, 0.15);
+  border-radius: 9999px;
+  padding: 0.5rem 1rem;
+  display: flex;
+  align-items: center;
+  gap: 0.6rem;
+  font-size: 0.85rem;
+  font-weight: 600;
+  color: #f1f5f9;
+  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.4);
+}
+
+.pulse-dot {
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  background: #10b981;
+  box-shadow: 0 0 10px #10b981;
+  animation: pulse-ring 2s infinite;
+  flex-shrink: 0;
+}
+
+@keyframes pulse-ring {
+  0% { transform: scale(0.95); box-shadow: 0 0 0 0 rgba(16, 185, 129, 0.7); }
+  70% { transform: scale(1); box-shadow: 0 0 0 8px rgba(16, 185, 129, 0); }
+  100% { transform: scale(0.95); box-shadow: 0 0 0 0 rgba(16, 185, 129, 0); }
+}
+
+/* 3D Thumbnails Selector */
+.hero-thumb-row {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 0.6rem;
+  margin-top: 1rem;
+}
+
+.thumb-btn {
+  background: rgba(30, 41, 59, 0.7);
+  border: 1.5px solid rgba(255, 255, 255, 0.1);
+  border-radius: 0.85rem;
+  padding: 0.4rem;
+  cursor: pointer;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.3rem;
+  transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+  color: var(--text-muted);
+  font-size: 0.72rem;
+  font-weight: 600;
+}
+
+.thumb-btn img {
+  width: 100%;
+  height: 48px;
+  object-fit: cover;
+  border-radius: 0.5rem;
+}
+
+.thumb-btn:hover {
+  border-color: rgba(56, 189, 248, 0.5);
+  transform: translateY(-2px);
+  color: #f1f5f9;
+}
+
+.thumb-btn.active {
+  border-color: #10b981;
+  background: rgba(16, 185, 129, 0.15);
+  color: #34d399;
+  box-shadow: 0 0 15px rgba(16, 185, 129, 0.3);
+}
+
+/* Chapter Card with 3D Pixar Cover */
+.chapter-card-3d {
+  background: var(--bg-card);
+  border: 1px solid var(--border-color);
+  border-radius: 1.5rem;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+  transition: all 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+  position: relative;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+}
+
+.chapter-card-3d:hover {
+  transform: translateY(-6px);
+  border-color: rgba(56, 189, 248, 0.4);
+  box-shadow: 0 20px 45px rgba(0, 0, 0, 0.4);
+}
+
+.chapter-cover-box {
+  position: relative;
+  width: 100%;
+  height: 190px;
+  overflow: hidden;
+}
+
+.chapter-cover-img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  transition: transform 0.6s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.chapter-card-3d:hover .chapter-cover-img {
+  transform: scale(1.08);
+}
+
+.chapter-badge-overlay {
+  position: absolute;
+  top: 0.85rem;
+  left: 0.85rem;
+  background: rgba(15, 23, 42, 0.85);
+  backdrop-filter: blur(8px);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  border-radius: 9999px;
+  padding: 0.3rem 0.75rem;
+  font-size: 0.75rem;
+  font-weight: 700;
+  display: flex;
+  align-items: center;
+  gap: 0.35rem;
+}
+
+.chapter-body {
+  padding: 1.35rem;
+  display: flex;
+  flex-direction: column;
+  flex: 1;
+}
+
+/* Framework Card with 3D Graphics */
+.framework-card-3d {
+  background: var(--bg-card);
+  border: 1px solid var(--border-color);
+  border-radius: 1.25rem;
+  padding: 1.25rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+  transition: all 0.35s ease;
+  position: relative;
+  overflow: hidden;
+}
+
+.framework-card-3d:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 15px 35px rgba(0, 0, 0, 0.35);
+}
+
+.framework-3d-thumb {
+  width: 100%;
+  height: 130px;
+  border-radius: 0.85rem;
+  object-fit: cover;
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  transition: transform 0.4s ease;
+}
+
+.framework-card-3d:hover .framework-3d-thumb {
+  transform: scale(1.05);
+}
+
+/* 3D Sensor & Hardware Showcase Gallery */
+.sensor-showcase-section {
+  margin: 3.5rem 0 2rem 0;
+  padding: 2.5rem;
+  background: linear-gradient(135deg, rgba(15, 23, 42, 0.85) 0%, rgba(20, 32, 54, 0.75) 100%);
+  border: 1px solid rgba(56, 189, 248, 0.25);
+  border-radius: 2rem;
+  position: relative;
+  box-shadow: 0 25px 60px rgba(0, 0, 0, 0.4);
+}
+
+.sensor-grid-6col {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+  gap: 1.5rem;
+  margin-top: 2rem;
+}
+
+.sensor-item-card {
+  background: rgba(30, 41, 59, 0.6);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 1.25rem;
+  overflow: hidden;
+  transition: all 0.35s ease;
+  display: flex;
+  flex-direction: column;
+}
+
+.sensor-item-card:hover {
+  transform: translateY(-5px);
+  border-color: rgba(16, 185, 129, 0.4);
+  box-shadow: 0 15px 35px rgba(16, 185, 129, 0.15);
+}
+
+.sensor-item-img {
+  width: 100%;
+  height: 170px;
+  object-fit: cover;
+  transition: transform 0.5s ease;
+}
+
+.sensor-item-card:hover .sensor-item-img {
+  transform: scale(1.06);
+}
+
+.sensor-item-content {
+  padding: 1.25rem;
+  display: flex;
+  flex-direction: column;
+  flex: 1;
+}
+
+/* Floating AI Mascot Widget */
+.floating-ai-mascot-btn {
+  position: fixed;
+  bottom: 5.5rem;
+  right: 1.75rem;
+  z-index: 999;
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  background: transparent;
+  border: none;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.mascot-avatar-circle {
+  width: 64px;
+  height: 64px;
+  border-radius: 50%;
+  border: 3px solid #38bdf8;
+  box-shadow: 0 8px 30px rgba(56, 189, 248, 0.5);
+  background: #0f172a;
+  overflow: hidden;
+  position: relative;
+  animation: animate-float 4s ease-in-out infinite;
+  transition: transform 0.3s ease;
+}
+
+.mascot-avatar-circle img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  transform: scaleX(-1);
+}
+
+.mascot-avatar-circle:hover {
+  transform: scale(1.12);
+  box-shadow: 0 10px 35px rgba(16, 185, 129, 0.6);
+  border-color: #10b981;
+}
+
+.mascot-speech-bubble {
+  background: rgba(15, 23, 42, 0.95);
+  border: 1px solid rgba(56, 189, 248, 0.4);
+  border-radius: 1rem;
+  padding: 0.65rem 1rem;
+  font-size: 0.82rem;
+  font-weight: 600;
+  color: #f1f5f9;
+  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.4);
+  backdrop-filter: blur(10px);
+  position: relative;
+  max-width: 220px;
+  text-align: left;
+  animation: fadeIn 0.4s ease;
+}
+
+.mascot-speech-bubble::after {
+  content: "";
+  position: absolute;
+  right: -8px;
+  top: 50%;
+  transform: translateY(-50%);
+  border-width: 6px 0 6px 8px;
+  border-style: solid;
+  border-color: transparent transparent transparent rgba(15, 23, 42, 0.95);
+}
+
+@media (max-width: 768px) {
+  .mascot-speech-bubble {
+    display: none;
+  }
+  .floating-ai-mascot-btn {
+    bottom: 4.8rem;
+    right: 1rem;
+  }
+}
+
 

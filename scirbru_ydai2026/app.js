@@ -945,9 +945,88 @@ function initHeroTicker() {
 }
 
 // ==========================================================================
+// 3D Pixar Visual Features (Hero Showcase & Mascot)
+// ==========================================================================
+function changeHeroImage(src, caption, btn) {
+  const heroImg = document.getElementById('heroImage');
+  const cap = document.getElementById('hero-img-caption');
+  if (heroImg) {
+    heroImg.style.opacity = '0';
+    heroImg.style.transform = 'scale(0.95)';
+    setTimeout(() => {
+      heroImg.src = src;
+      if (cap) cap.textContent = caption;
+      heroImg.style.opacity = '1';
+      heroImg.style.transform = 'scale(1)';
+    }, 250);
+  }
+  document.querySelectorAll('.thumb-btn').forEach(b => b.classList.remove('active'));
+  if (btn) btn.classList.add('active');
+}
+
+// 3D Pixar Mascot Avatar Cycling in Header
+function initNavbarLogoRotation() {
+  const rootPath = 'assets/images/';
+  const logoImages = [
+    rootPath + 'nong_smartscience.png',
+    rootPath + 'nong_robot_v1.png',
+    rootPath + 'nong_robot_v2.png'
+  ];
+  let logoIndex = 0;
+  const logoElement = document.getElementById('navbarLogo');
+
+  if (logoElement) {
+    setInterval(() => {
+      logoElement.style.opacity = '0';
+      logoElement.style.transform = 'scale(0.8) rotate(-180deg)';
+
+      setTimeout(() => {
+        logoIndex = (logoIndex + 1) % logoImages.length;
+        logoElement.src = logoImages[logoIndex];
+        logoElement.style.opacity = '1';
+        logoElement.style.transform = 'scale(1) rotate(0deg)';
+      }, 400);
+    }, 3500);
+  }
+}
+
+// Interactive Mascot Speech Bubble
+const mascotGreetings = [
+  '👋 สวัสดีครับ! ผม <strong>น้อง SmartScience</strong> ยินดีต้อนรับสู่อบรม AIoT เกษตรดิจิทัลครับ 🌱',
+  '💡 รู้หรือไม่? เซนเซอร์ Capacitive ช่วยวัดความชื้นดินแม่นยำ ไม่เป็นสนิมเมื่อฝังดิน 🔬',
+  '🧠 อย่าลืมแวะไปทดลองเล่น <strong>Virtual Farm Lab</strong> และจำลองรดน้ำอัตโนมัตินะครับ ⚡',
+  '📝 มีโควตาจำกัดเพียง 60 ที่นั่ง สมัครเข้าร่วมอบรมฟรีได้ที่เมนู <strong>ลงทะเบียน</strong> เลยครับ ✍️'
+];
+let mascotGreetIdx = 0;
+
+function toggleMascotGreeting() {
+  const bubble = document.getElementById('mascot-bubble');
+  const mascotImg = document.getElementById('mascotImg');
+  if (!bubble) return;
+
+  mascotGreetIdx = (mascotGreetIdx + 1) % mascotGreetings.length;
+  bubble.style.opacity = '0';
+  bubble.style.transform = 'translateY(5px)';
+
+  if (mascotImg) {
+    mascotImg.style.transform = 'scale(1.2) scaleX(-1)';
+  }
+
+  setTimeout(() => {
+    bubble.innerHTML = mascotGreetings[mascotGreetIdx];
+    bubble.style.opacity = '1';
+    bubble.style.transform = 'translateY(0)';
+    if (mascotImg) {
+      mascotImg.style.transform = 'scale(1) scaleX(-1)';
+    }
+  }, 250);
+}
+
+// ==========================================================================
 // Initializations
 // ==========================================================================
 document.addEventListener('DOMContentLoaded', () => {
+  initNavbarLogoRotation();
   initHeroTicker();
   renderQuiz();
   selectCodePreset('arduino_soil');
