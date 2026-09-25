@@ -921,7 +921,7 @@ function initHeroTicker() {
       color: "#06b6d4"
     },
     {
-      text: "🚀 iSPACE & SMART FARM: Smart Sensors | ESP32 IoT | Edge Deep Learning | Real-time Dashboard | Virtual Lab",
+      text: "🚀 LEQs & SMART FARM: Smart Sensors | ESP32 IoT | Edge Deep Learning | Real-time Dashboard | Virtual Lab",
       className: "hero-ticker-badge anim-marquee",
       duration: 20000,
       color: "#10b981"
