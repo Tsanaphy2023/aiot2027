@@ -750,7 +750,7 @@ async function handleLookupRegistration(e) {
                 </div>
                 <div class="pass-detail-item">
                   <div class="detail-lbl">วันและเวลาจัดอบรม</div>
-                  <div class="detail-val" style="color: #f59e0b;">25 - 26 ธ.ค. 2568 (08:30 - 16:30 น.)</div>
+                  <div class="detail-val" style="color: #f59e0b;">เร็วๆ นี้ โปรดติดตาม</div>
                 </div>
                 <div class="pass-detail-item">
                   <div class="detail-lbl">สถานที่จัดอบรม</div>
@@ -886,6 +886,10 @@ async function loadDynamicCmsContent() {
           container.style.display = 'flex';
         }
       }
+      if (d.content.workshop_dates) {
+        const passDates = document.getElementById('success-reg-dates');
+        if (passDates) passDates.textContent = d.content.workshop_dates;
+      }
     }
   } catch (e) {
     console.log('CMS offline fallback');
@@ -903,6 +907,12 @@ function initHeroTicker() {
       className: "hero-ticker-badge anim-blink",
       duration: 3500,
       color: "#ef4444"
+    },
+    {
+      text: "📢 เปิดรับสมัครครูและนักเรียน: เร็วๆ นี้ โปรดติดตาม (จำกัด 60 ที่นั่ง ฟรีไม่มีค่าใช้จ่าย)",
+      className: "hero-ticker-badge anim-slide-up",
+      duration: 4500,
+      color: "#10b981"
     },
     {
       text: "🌏 LEQs SciRBRU Digital Precision Farming & Deep AI",

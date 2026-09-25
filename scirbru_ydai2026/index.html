@@ -151,10 +151,10 @@
     <section class="tab-pane active" id="tab-overview">
       
       <!-- Dynamic Announcement Banner -->
-      <div id="site-announcement-container" style="display:none; margin-bottom: 1.5rem; background: rgba(16, 185, 129, 0.12); border: 1px solid rgba(16, 185, 129, 0.35); border-radius: var(--radius-md); padding: 0.85rem 1.25rem; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 0.75rem;">
+      <div id="site-announcement-container" style="display:flex; margin-bottom: 1.5rem; background: rgba(16, 185, 129, 0.12); border: 1px solid rgba(16, 185, 129, 0.35); border-radius: var(--radius-md); padding: 0.85rem 1.25rem; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 0.75rem;">
         <div style="display: flex; align-items: center; gap: 0.75rem;">
           <span style="font-size: 1.3rem;">📢</span>
-          <span id="site-announcement-text" style="font-size: 0.9rem; font-weight: 500; color: #a7f3d0;"></span>
+          <span id="site-announcement-text" style="font-size: 0.9rem; font-weight: 500; color: #a7f3d0;">📢 เปิดรับสมัครครูและนักเรียนที่สนใจเข้าร่วมโครงการอบรมเชิงปฏิบัติการ (เร็วๆ นี้ โปรดติดตาม) ณ คณะวิทยาศาสตร์และเทคโนโลยี มรภ.รำไพพรรณี รับจำนวนจำกัด 60 ที่นั่ง ฟรีไม่มีค่าใช้จ่าย!</span>
         </div>
         <button class="btn-cta" style="padding: 0.4rem 1rem; font-size: 0.8rem;" onclick="switchPortalTab('register')">
           <span>✍️ ลงทะเบียนทันที</span>
@@ -1384,7 +1384,7 @@
                     </div>
                     <div class="pass-detail-item">
                       <div class="detail-lbl">วันและเวลาจัดอบรม</div>
-                      <div class="detail-val" style="color: #f59e0b;">25 - 26 ธ.ค. 2568 (08:30 - 16:30 น.)</div>
+                      <div class="detail-val" id="success-reg-dates" style="color: #f59e0b;">เร็วๆ นี้ โปรดติดตาม</div>
                     </div>
                     <div class="pass-detail-item">
                       <div class="detail-lbl">สถานที่จัดอบรม</div>
